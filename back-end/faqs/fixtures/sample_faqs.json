@@ -1,0 +1,68 @@
+[
+  {
+    "model": "faqs.faq",
+    "pk": 1,
+    "fields": {
+      "question": "What is engivexlab?",
+      "answer": "engivexlab is where we recruit and work with QA testers for our plugins for electrical-engineering and 3D tools such as KiCAD, Altium Designer, Allegro, Blender and Maya. Testers use the plugins in real projects and report bugs and feedback before releases.",
+      "is_active": true,
+      "sort_order": 1,
+      "created_at": "2026-09-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "faqs.faq",
+    "pk": 2,
+    "fields": {
+      "question": "How do I apply to test a plugin?",
+      "answer": "1. Click Sign Up and create your account (or log in with Google).\n2. Open Positions and choose a plugin that matches your experience.\n3. Click the card to read the description, responsibilities and instruction guideline.\n4. Click Apply.",
+      "is_active": true,
+      "sort_order": 2,
+      "created_at": "2026-09-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "faqs.faq",
+    "pk": 3,
+    "fields": {
+      "question": "Can I apply to more than one position?",
+      "answer": "Yes. You can apply to every position that fits your skills, once per position. The Apply button changes to \"Applied\" so you can see where you have already applied.",
+      "is_active": true,
+      "sort_order": 3,
+      "created_at": "2026-09-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "faqs.faq",
+    "pk": 4,
+    "fields": {
+      "question": "What should I put on my profile?",
+      "answer": "Add your name, a short line about your experience (Identity), your LinkedIn profile, phone, address, a photo and your personal website if you have one. A complete profile helps our team review your application faster.",
+      "is_active": true,
+      "sort_order": 4,
+      "created_at": "2026-09-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "faqs.faq",
+    "pk": 5,
+    "fields": {
+      "question": "What happens after I apply?",
+      "answer": "SAMPLE — describe your review process here (e.g. how you contact applicants and how long it takes). Edit this row in the faqs_faq table.",
+      "is_active": true,
+      "sort_order": 5,
+      "created_at": "2026-09-26T00:00:00Z"
+    }
+  },
+  {
+    "model": "faqs.faq",
+    "pk": 6,
+    "fields": {
+      "question": "Is this a paid role?",
+      "answer": "SAMPLE — describe payment and time commitment here, or set is_active = 0 to hide this question.",
+      "is_active": true,
+      "sort_order": 6,
+      "created_at": "2026-09-26T00:00:00Z"
+    }
+  }
+]

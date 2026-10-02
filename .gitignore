@@ -1,0 +1,15 @@
+# Never commit secrets, local data or build output
+.env
+*.log
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+dist/
+back-end/db.sqlite3
+back-end/media/
+back-end/staticfiles/
+front-end/*.tsbuildinfo
+
+# Previews and files from Claude, not part of the website
+Claude outputs/

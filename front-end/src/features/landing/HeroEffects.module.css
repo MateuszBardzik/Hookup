@@ -1,0 +1,213 @@
+/* Moving details on the hero picture (HeroEffects.tsx). Indigo family: #5038ee · #8b7bff · #b9adff */
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* PCB */
+.chipGlow {
+  animation: breathe 4s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+.sheen {
+  mix-blend-mode: screen;
+  animation: sheen 6s ease-in-out infinite;
+}
+@keyframes sheen {
+  0% {
+    transform: skewX(-20deg) translateX(-140px);
+  }
+  55%,
+  100% {
+    transform: skewX(-20deg) translateX(560px);
+  }
+}
+
+/* 3D part: scan plane moving down */
+.partScan {
+  animation: partScan 5s ease-in-out infinite;
+}
+@keyframes partScan {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(290px);
+    opacity: 0;
+  }
+}
+
+/* image card: scan line */
+.photoScan {
+  stroke: #ffffff;
+  stroke-width: 3;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 3px #8b7bff);
+  animation: photoScan 3.4s ease-in-out infinite alternate;
+}
+@keyframes photoScan {
+  from {
+    transform: translateY(4px);
+  }
+  to {
+    transform: translateY(52px);
+  }
+}
+
+/* annotation box */
+.annotation {
+  fill: rgba(80, 56, 238, 0.06);
+  stroke: #5038ee;
+  stroke-width: 1.6;
+  stroke-dasharray: 7 6;
+  animation: march 1.6s linear infinite;
+}
+@keyframes march {
+  to {
+    stroke-dashoffset: -26;
+  }
+}
+
+/* ribbon streak */
+.ribbonStreak {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-dasharray: 14 86;
+  stroke-dashoffset: 100;
+  opacity: 0.7;
+  filter: blur(1.5px);
+  animation: streak 4.5s linear infinite;
+}
+@keyframes streak {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* checklist */
+.tickRing {
+  fill: none;
+  stroke: #8b7bff;
+  stroke-width: 2.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  opacity: 0;
+  animation: tickRing 4.2s ease-out infinite;
+}
+@keyframes tickRing {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  40%,
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* nodes + handles */
+.halo {
+  fill: none;
+  stroke: #6d5cff;
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: halo 3s ease-out infinite;
+}
+@keyframes halo {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+.handle {
+  fill: none;
+  stroke: #8b7bff;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: handle 2.8s ease-in-out infinite;
+}
+@keyframes handle {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.9);
+    opacity: 0.9;
+  }
+}
+
+/* people at work: cursor tags drifting gently */
+.cursor {
+  animation: drift 7.5s ease-in-out infinite;
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  30% {
+    transform: translate(8px, -5px);
+  }
+  65% {
+    transform: translate(-5px, 6px);
+  }
+}
+.cursorArrow {
+  fill: var(--tone);
+  stroke: #fff;
+  stroke-width: 1.8;
+  stroke-linejoin: round;
+}
+.cursorPill {
+  fill: var(--tone);
+}
+.cursorText {
+  fill: #fff;
+  font: 600 13.5px var(--font-sans);
+}
+.cursorIndigo {
+  --tone: #5038ee;
+}
+.cursorViolet {
+  --tone: #9333ea;
+}
+.cursorSky {
+  --tone: #0284c7;
+}
+
+/* paused off screen / tab hidden */
+.paused * {
+  animation-play-state: paused !important;
+}

@@ -1,0 +1,61 @@
+{% extends "admin/base.html" %}
+{% comment %}
+  Look of the admin pages (/admin/): engivexlab logo + the website's indigo colours.
+  Colours are Django admin's own CSS variables; change the hex values below.
+{% endcomment %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | engivexlab admin{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  :root,
+  html[data-theme="light"] {
+    --primary: #4f35e6;          /* table headers, selected rows */
+    --secondary: #3d26c4;
+    --accent: #d9d3ff;
+    --primary-fg: #ffffff;
+    --header-bg: #0f172a;        /* top bar */
+    --header-color: #cbd5e1;
+    --header-link-color: #ffffff;
+    --breadcrumbs-bg: #4f35e6;
+    --link-fg: #4f35e6;
+    --link-hover-color: #3d26c4;
+    --link-selected-fg: #3d26c4;
+    --button-bg: #4f35e6;
+    --button-hover-bg: #3d26c4;
+    --default-button-bg: #0f172a;
+    --default-button-hover-bg: #1e293b;
+    --selected-row: #efecff;
+    --body-bg: #ffffff;
+    --darkened-bg: #f6f5fe;
+    --hairline-color: #e6e3f3;
+    --border-color: #dcd7ee;
+  }
+  #branding h1,
+  #branding h1 a:link,
+  #branding h1 a:visited {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    font-weight: 600;
+  }
+</style>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+  <a href="{% url 'admin:index' %}">
+    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path d="M19.5 4.5h7.5L12.5 27.5H5z" fill="#a99bff"/>
+      <path d="M2 4.5h7.5l17 23H19z" fill="#6d5cff" stroke="#0f172a" stroke-width="1.6" stroke-linejoin="round"/>
+    </svg>
+    {{ site_header|default:_('Django administration') }}
+  </a>
+</h1>
+{% if user.is_anonymous %}
+  {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
