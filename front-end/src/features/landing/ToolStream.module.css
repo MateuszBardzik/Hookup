@@ -1,0 +1,52 @@
+/* Full-width white band with the tool names (part of the first screen, see Landing.module.css .fold) */
+.section {
+  flex: none;
+  padding: clamp(14px, 2.4vh, 28px) 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.heading {
+  margin: 0 0 clamp(6px, 1.2vh, 14px);
+  color: var(--color-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px clamp(24px, 4.5vw, 56px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tool {
+  --accent: var(--color-primary); /* hover colour; set per tool in site.ts */
+  color: #6b7280;
+  font-size: clamp(15px, 1.3vw, 18px);
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+.tool:nth-child(even) {
+  font-style: italic;
+}
+.tool:hover {
+  color: var(--accent);
+}
+.tool img {
+  height: 28px;
+  filter: grayscale(1);
+  opacity: 0.7;
+  transition: filter 0.2s, opacity 0.2s;
+}
+.tool:hover img {
+  filter: none;
+  opacity: 1;
+}

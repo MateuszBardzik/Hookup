@@ -1,0 +1,38 @@
+[
+  {
+    "model": "portal.trainingmodule",
+    "pk": 1,
+    "fields": {
+      "title": "Welcome & how we work",
+      "description": "How projects, tasks and payments work, and who to ask for help.",
+      "url": "",
+      "duration": "10 min",
+      "is_active": true,
+      "sort_order": 1
+    }
+  },
+  {
+    "model": "portal.trainingmodule",
+    "pk": 2,
+    "fields": {
+      "title": "Quality guidelines",
+      "description": "What a great annotation, rating or bug report looks like \u2014 with examples.",
+      "url": "",
+      "duration": "25 min",
+      "is_active": true,
+      "sort_order": 2
+    }
+  },
+  {
+    "model": "portal.trainingmodule",
+    "pk": 3,
+    "fields": {
+      "title": "Tools walkthrough",
+      "description": "A tour of the tools you'll use on projects.",
+      "url": "",
+      "duration": "15 min",
+      "is_active": true,
+      "sort_order": 3
+    }
+  }
+]

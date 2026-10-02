@@ -1,0 +1,256 @@
+/* ---------- First screen (hero + tool strip) ----------
+ * .fold is exactly one screen tall (minus the header), capped on very tall
+ * screens. The hero takes whatever the tool strip leaves; the picture shrinks
+ * to fit and the headline scales with the screen height (the "vh" values). */
+.fold {
+  display: flex;
+  flex-direction: column;
+  height: calc(100svh - var(--header-height));
+  max-height: 960px;
+}
+/* full-width area above the tool strip: moving background (HeroBackdrop) + the hero on top */
+.heroStage {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+/* the hero sits in the page width; the tool strip under it is a full-width white band */
+.heroWrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ---------- Hero: open text on the left, picture card on the right ---------- */
+.hero {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 88px);
+  align-items: center;
+  padding: clamp(20px, 4vh, 56px) 0;
+}
+
+.heroText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+.title {
+  margin: clamp(14px, 2.6vh, 28px) 0 0;
+  color: var(--color-text);
+  font-size: clamp(40px, min(5.6vw, 8vh), 92px);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+}
+
+.highlight {
+  color: var(--color-highlight);
+  font-style: italic;
+}
+
+.subtitle {
+  max-width: 480px;
+  margin: clamp(14px, 2.6vh, 28px) 0 0;
+  color: var(--color-muted);
+  font-size: clamp(15px, min(1.2vw, 2vh), 17px);
+  line-height: 1.65;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: clamp(18px, 3.4vh, 36px);
+}
+.cta {
+  height: clamp(44px, 5.4vh, 50px);
+  padding: 0 24px;
+}
+
+/* short facts under a thin rule */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: clamp(18px, 3.4vh, 36px) 0 0;
+  padding: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+  list-style: none;
+}
+.chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.chips li::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+/* right: the hero illustration. On wide screens it reaches past the page width towards the right
+ * edge (--hero-bleed), so it can be large and airy. */
+.heroArt {
+  --hero-bleed: clamp(0px, calc((100vw - var(--page-width)) / 2), 240px);
+  position: relative;
+  align-self: center;
+  width: calc(100% + var(--hero-bleed));
+  margin-right: calc(-1 * var(--hero-bleed));
+  aspect-ratio: 4 / 3; /* the picture's own shape; on short screens it is trimmed top/bottom */
+  max-height: min(100%, 680px);
+  min-height: 0;
+}
+
+/* the picture (it stays still; moving details are in HeroEffects): no frame, edges fade into the page */
+.artCard {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* soft fade on all four edges (two gradients, kept where both are opaque) */
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent, #000 12%, #000 90%, transparent),
+    linear-gradient(180deg, transparent, #000 12%, #000 86%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent, #000 12%, #000 90%, transparent),
+    linear-gradient(180deg, transparent, #000 12%, #000 86%, transparent);
+  mask-composite: intersect;
+}
+.artCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* centred, like the effects layer (xMidYMid slice) */
+}
+
+.status {
+  position: absolute;
+  right: 14%;
+  bottom: 12%;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+  color: var(--color-text);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* small "live" dot */
+.pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 60%, transparent);
+  animation: pulse 2.4s infinite;
+}
+@keyframes pulse {
+  70% {
+    box-shadow: 0 0 0 9px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.caption {
+  position: absolute;
+  top: clamp(16px, 3.4vh, 36px);
+  left: clamp(20px, 3vw, 40px);
+  max-width: 220px;
+  margin: 0;
+  color: var(--color-primary);
+  font-family: var(--font-serif);
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+/* Short screens (laptops): drop the fact list to make room */
+@media (max-height: 760px) {
+  .chips {
+    display: none;
+  }
+}
+
+/* ---------- Tablet / phone: text on top, picture fills the rest ---------- */
+@media (max-width: 900px) {
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: clamp(14px, 2.5vh, 28px);
+    padding: clamp(16px, 3vh, 40px) 0 clamp(12px, 2vh, 20px);
+  }
+  .heroText {
+    flex: none;
+  }
+  .title {
+    font-size: clamp(36px, min(8.4vw, 6.2vh), 64px);
+  }
+  .subtitle {
+    font-size: clamp(14px, min(2.4vw, 2vh), 17px);
+  }
+  .chips,
+  .caption {
+    display: none;
+  }
+  .heroArt {
+    --hero-bleed: 0px;
+    flex: 0 1 auto;
+    max-height: none;
+  }
+  .status {
+    right: 10%;
+    bottom: 8%;
+    padding: 7px 12px;
+    font-size: 10px;
+  }
+}
+@media (max-width: 520px) {
+  .actions {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+  .cta {
+    flex: 1 1 0;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+}
+
+/* Very short screens (phone held sideways): let the page scroll normally */
+@media (max-height: 540px) {
+  .fold {
+    height: auto;
+  }
+  .heroStage {
+    flex: none;
+  }
+  .heroArt {
+    height: 280px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+}

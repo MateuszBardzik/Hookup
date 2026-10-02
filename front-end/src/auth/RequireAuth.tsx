@@ -1,0 +1,11 @@
+// Wrap a page with <RequireAuth> to make it visible only when logged in.
+import type { ReactNode } from 'react'
+import { Navigate } from 'react-router-dom'
+import { useAuth } from './useAuth'
+
+export function RequireAuth({ children }: { children: ReactNode }) {
+  const { user, loading } = useAuth()
+  if (loading) return null
+  if (!user) return <Navigate to="/" replace />
+  return <>{children}</>
+}

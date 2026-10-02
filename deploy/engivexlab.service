@@ -1,0 +1,21 @@
+# Runs the Django back-end with gunicorn. nginx talks to it through a socket file.
+# Installed to /etc/systemd/system/ by server-setup.sh.
+#   status:   systemctl status engivexlab
+#   logs:     journalctl -u engivexlab -f
+[Unit]
+Description=engivexlab website (Django + gunicorn)
+After=network.target
+
+[Service]
+User=engivex
+Group=www-data
+UMask=0007
+WorkingDirectory=/srv/engivexlab/app/back-end
+RuntimeDirectory=engivexlab
+ExecStart=/srv/engivexlab/app/back-end/.venv/bin/gunicorn config.wsgi:application \
+  --workers 3 --timeout 60 --bind unix:/run/engivexlab/gunicorn.sock \
+  --access-logfile - --error-logfile -
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,50 @@
+/*
+ * Design tokens: change the look of the whole site here.
+ * Style: open and airy: a plain lavender-white page, sections separated by space and full-width
+ * bands (white / dark navy) instead of boxes, navy ink, one indigo for actions (engivexlab brand).
+ * Fonts: a thin serif for big headings (Instrument Serif), Inter for everything else.
+ */
+:root {
+  /* Colors */
+  --color-bg: #f7f7fd;          /* page background (lavender-white) */
+  --color-surface: #ffffff;     /* white bands, cards, dialogs, header */
+  --color-sage: #f0eefe;        /* soft indigo tint (hero picture card, icon holders) */
+  --color-text: #0f172a;        /* ink (navy-black) */
+  --color-muted: #5b6577;
+  --color-border: #e2e8f0;
+  --color-primary: #4f35e6;     /* main buttons, links */
+  --color-primary-hover: #3d26c4;
+  --color-primary-soft: #ece9ff;
+  --color-highlight: #5038ee;   /* italic words in the big headings */
+  --color-accent: #6d5cff;      /* small dots, live indicator */
+  --color-navy: #0f172a;        /* dark bands, banners, footer, portal sidebar */
+  --color-navy-2: #16213d;
+  --grid-line: rgba(80, 56, 238, 0.06); /* fine grid behind the hero picture */
+  --color-badge-bg: #f2edfd;    /* "Vendor" badge on feedback cards (lavender) */
+  --color-badge-text: #6b46c1;
+  --color-danger: #c62828;
+  --color-success: #1f7a4d;
+
+  /* Page background (global.css → body::before / body::after): plain by default */
+  --bg-grid-color: transparent;              /* faint page grid, e.g. rgba(15, 23, 42, 0.05) */
+  --bg-grid-size: 64px;
+  --bg-glow-1: rgba(109, 92, 255, 0.08);     /* very soft indigo glow, top left */
+  --bg-glow-2: transparent;                  /* lavender glow, bottom right */
+  --bg-contours-opacity: 0;                  /* topographic lines (public/bg-contours.svg); 0 hides them */
+
+  /* Typography */
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif; /* headings */
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; /* text */
+
+  /* Shape & spacing */
+  --radius-sm: 10px;   /* buttons; inputs use --radius-input */
+  --radius-input: 10px;
+  --radius-md: 14px;   /* cards */
+  --radius-lg: 24px;   /* picture card, banners, dialogs */
+  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.05), 0 12px 32px rgba(15, 35, 80, 0.07);
+  --shadow-button: 0 8px 20px rgba(79, 53, 230, 0.28);
+  --shadow-dialog: 0 24px 60px color-mix(in srgb, var(--color-text) 18%, transparent);
+  --section-space: clamp(64px, 9vw, 112px); /* space above/below each section */
+  --page-width: 1280px;
+  --header-height: 68px;
+}
