@@ -57,7 +57,7 @@ export function PortalLayout() {
       <ScrollToTop />
       <aside className={`${styles.sidebar} ${open ? styles.sidebarOpen : ''}`}>
         <Link to="/" className={styles.brand}>
-          <img src={site.logo} alt="" width={28} height={28} />
+          <img src={site.logo} alt="" width={44} height={32} />
           <span>{site.name}</span>
         </Link>
         <p className={styles.sideTitle}>{site.portalTitle}</p>

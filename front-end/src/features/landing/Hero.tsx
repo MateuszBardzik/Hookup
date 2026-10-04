@@ -28,6 +28,7 @@ export function Hero() {
     i >= 0 ? (
       <>
         {title.slice(0, i)}
+        {site.hero.highlightOnNewLine && <br />}
         <em className={styles.highlight}>{highlight}</em>
         {title.slice(i + highlight.length)}
       </>

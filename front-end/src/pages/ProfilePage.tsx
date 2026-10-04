@@ -16,7 +16,7 @@ import type { User } from '../types'
 const FIELDS: { name: keyof User; label: string; type?: string; placeholder?: string; half?: boolean }[] = [
   { name: 'first_name', label: 'First name', half: true },
   { name: 'last_name', label: 'Last name', half: true },
-  { name: 'identity', label: 'Identity' },
+  // { name: 'identity', label: 'Identity' },
   { name: 'address', label: 'Address' },
   { name: 'phone', label: 'Phone', type: 'tel', half: true },
   { name: 'linkedin_url', label: 'LinkedIn profile', type: 'url', placeholder: 'https://linkedin.com/in/…', half: true },

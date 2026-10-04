@@ -23,9 +23,40 @@
 }
 
 .text {
-  max-width: 320px;
-  margin: 10px 0 0;
+  max-width: 470px;
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Remote · Project-based · Global community */
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 0;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
   font-size: 14px;
+}
+.facts li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(255, 255, 255, 0.85);
+}
+.facts svg {
+  color: #b9adff;
+}
+/* small dot between the facts */
+.facts li + li::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  margin: 0 14px;
+  border-radius: 50%;
+  background: #8b7bff;
 }
 
 .links {

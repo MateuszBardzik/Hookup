@@ -1,8 +1,9 @@
-// Page footer: logo + tagline, the same links as the navigation bar, social links, copyright.
-// Links and social URLs: config/site.ts (nav, social).
+// Page footer: logo + text + short facts (Remote · Project-based · Global community), the same links
+// as the navigation bar, social links, copyright. Texts and links: config/site.ts (footerText,
+// footerFacts, nav, social).
 import { Link } from 'react-router-dom'
 import { site } from '../config/site'
-import { ChatIcon, LinkedInIcon, XIcon } from './icons'
+import { ChatIcon, FeatureIcon, LinkedInIcon, XIcon } from './icons'
 import styles from './Footer.module.css'
 
 const SOCIAL = [
@@ -17,10 +18,20 @@ export function Footer() {
       <div className={`container ${styles.inner}`}>
         <div className={styles.brandCol}>
           <div className={styles.brand}>
-            <img src={site.logo} alt="" width={26} height={26} />
+            <img src={site.logo} alt="" width={41} height={30} />
             <span>{site.name}</span>
           </div>
           <p className={styles.text}>{site.footerText}</p>
+          {site.footerFacts.length > 0 && (
+            <ul className={styles.facts}>
+              {site.footerFacts.map((fact) => (
+                <li key={fact.label}>
+                  <FeatureIcon icon={fact.icon} size={16} />
+                  {fact.label}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <nav className={styles.links} aria-label="Footer">

@@ -1,4 +1,5 @@
 {% extends "admin/base.html" %}
+{% load static %}
 {% comment %}
   Look of the admin pages (/admin/): engivexlab logo + the website's indigo colours.
   Colours are Django admin's own CSS variables; change the hex values below.
@@ -46,10 +47,7 @@
 {% block branding %}
 <h1 id="site-name">
   <a href="{% url 'admin:index' %}">
-    <svg width="26" height="26" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <path d="M19.5 4.5h7.5L12.5 27.5H5z" fill="#a99bff"/>
-      <path d="M2 4.5h7.5l17 23H19z" fill="#6d5cff" stroke="#0f172a" stroke-width="1.6" stroke-linejoin="round"/>
-    </svg>
+    <img src="{% static 'engivexlab/logo.png' %}" width="44" height="32" alt="">
     {{ site_header|default:_('Django administration') }}
   </a>
 </h1>
