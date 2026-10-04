@@ -35,7 +35,7 @@ export function Header() {
   const actions = loading ? null : user ? (
     <>
       <Link to="/portal" className={`btn btn-primary ${styles.hideSmall}`}>
-        Dashboard
+        Workspace
       </Link>
       <UserMenu />
     </>
@@ -54,7 +54,7 @@ export function Header() {
     <header className={styles.header}>
       <div className={`container ${styles.inner}`}>
         <Link to="/" className={styles.brand}>
-          <img src={site.logo} alt="" width={30} height={30} />
+          <img src={site.logo} alt="" width={50} height={36} />
           <span>{site.name}</span>
         </Link>
 

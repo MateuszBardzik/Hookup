@@ -364,6 +364,57 @@ export function ChatIcon({ size = 18 }: IconProps) {
   )
 }
 
+/** Mechanical CAD part: a bracket with a hole and a dimension line */
+export function CadIcon({ size = 22 }: IconProps) {
+  return (
+    <svg {...base(size)}>
+      <path d="M4 20V8h6v6h10v6Z" />
+      <circle cx="7" cy="11" r="1.2" />
+      <path d="M4 4h16M4 2.5v3M20 2.5v3" />
+    </svg>
+  )
+}
+
+/** Game engine: a gamepad */
+export function EngineIcon({ size = 22 }: IconProps) {
+  return (
+    <svg {...base(size)}>
+      <path d="M7 7h10a5 5 0 0 1 4.6 7l-.9 2.2a2.4 2.4 0 0 1-4 .6L15 15H9l-1.7 1.8a2.4 2.4 0 0 1-4-.6L2.4 14A5 5 0 0 1 7 7Z" />
+      <path d="M7.5 10v3M6 11.5h3M15.5 11h.01M17.5 12.5h.01" />
+    </svg>
+  )
+}
+
+export function HomeIcon({ size = 18 }: IconProps) {
+  return (
+    <svg {...base(size)}>
+      <path d="M3.5 11 12 4l8.5 7" />
+      <path d="M5.5 9.5V20h13V9.5" />
+      <path d="M10 20v-5h4v5" />
+    </svg>
+  )
+}
+
+/** A document with lines: "project-based" */
+export function ProjectIcon({ size = 18 }: IconProps) {
+  return (
+    <svg {...base(size)}>
+      <path d="M6 3h8l4 4v14H6Z" />
+      <path d="M14 3v4h4M9 12h6M9 16h4" />
+    </svg>
+  )
+}
+
+/** Pointer clicking on a screen: "expert demonstrations" */
+export function DemoIcon({ size = 22 }: IconProps) {
+  return (
+    <svg {...base(size)}>
+      <path d="M20 11V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h5" />
+      <path d="m13 13 7.5 2.8-3.2 1.3-1.3 3.2Z" />
+    </svg>
+  )
+}
+
 /** Icon for a position / service category (used by cards on several pages). */
 export function CategoryIcon({ category, size = 22 }: { category: string; size?: number }) {
   switch (category) {
@@ -379,6 +430,8 @@ export function CategoryIcon({ category, size = 22 }: { category: string; size?:
       return <BrainIcon size={size} />
     case 'evaluation':
       return <ChatCheckIcon size={size} />
+    case 'demo':
+      return <DemoIcon size={size} />
     case 'qa':
       return <ShieldIcon size={size} />
     default:
@@ -409,7 +462,31 @@ export function FeatureIcon({ icon, size = 24 }: { icon: string; size?: number }
       return <ShieldIcon size={size} />
     case 'heart':
       return <HeartIcon size={size} />
+    case 'cube':
+      return <CubeIcon size={size} />
+    case 'wallet':
+      return <WalletIcon size={size} />
+    case 'home':
+      return <HomeIcon size={size} />
+    case 'project':
+      return <ProjectIcon size={size} />
     default:
       return <CategoryIcon category={icon} size={size} />
+  }
+}
+
+/** Small icon on a tool pill ("Works with the tools you already know"), by tool category. */
+export function ToolIcon({ category, size = 18 }: { category: string; size?: number }) {
+  switch (category) {
+    case 'pcb':
+      return <ChipIcon size={size} />
+    case '3d':
+      return <CubeIcon size={size} />
+    case 'cad':
+      return <CadIcon size={size} />
+    case 'engine':
+      return <EngineIcon size={size} />
+    default:
+      return <GridIcon size={size} />
   }
 }

@@ -1,14 +1,15 @@
-/* Full-width white band with the tool names (part of the first screen, see Landing.module.css .fold) */
+/* Full-width white band with the scrolling tool pills (part of the first screen, see Landing.module.css .fold) */
 .section {
   flex: none;
-  padding: clamp(14px, 2.4vh, 28px) 0;
+  padding: clamp(12px, 2.2vh, 26px) 0;
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
   background: var(--color-surface);
 }
 
 .heading {
-  margin: 0 0 clamp(6px, 1.2vh, 14px);
+  margin: 0 0 clamp(8px, 1.4vh, 16px);
+  padding: 0 16px;
   color: var(--color-muted);
   font-size: 11px;
   font-weight: 600;
@@ -17,36 +18,92 @@
   text-transform: uppercase;
 }
 
-.row {
+/* the moving row; its edges fade out */
+.viewport {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.track {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px clamp(24px, 4.5vw, 56px);
+  width: max-content;
+  animation: stream var(--duration, 40s) linear infinite;
+}
+.viewport:hover .track {
+  animation-play-state: paused;
+}
+@keyframes stream {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.list {
+  display: flex;
+  gap: 14px;
   margin: 0;
-  padding: 0;
+  padding: 2px 7px; /* half the gap on each side, so the two copies join seamlessly */
   list-style: none;
 }
 
-.tool {
-  --accent: var(--color-primary); /* hover colour; set per tool in site.ts */
-  color: #6b7280;
-  font-size: clamp(15px, 1.3vw, 18px);
+.pill {
+  --tool: var(--color-primary); /* icon colour; set per tool in site.ts */
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 16px 7px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-size: 14px;
   font-weight: 600;
-  transition: color 0.2s ease;
+  white-space: nowrap;
+  transition: border-color 0.2s, background-color 0.2s;
 }
-.tool:nth-child(even) {
-  font-style: italic;
+.pill:hover {
+  border-color: color-mix(in srgb, var(--tool) 40%, var(--color-border));
+  background: var(--color-surface);
 }
-.tool:hover {
-  color: var(--accent);
+.icon {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--tool) 12%, #fff);
+  color: var(--tool);
 }
-.tool img {
-  height: 28px;
-  filter: grayscale(1);
-  opacity: 0.7;
-  transition: filter 0.2s, opacity 0.2s;
+.icon img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
 }
-.tool:hover img {
-  filter: none;
-  opacity: 1;
+/* official logos bring their own colours: plain white tile */
+.logo {
+  background: #fff;
+  box-shadow: inset 0 0 0 1px var(--color-border);
+}
+
+/* no motion: one centred, wrapping row, no copy */
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .track {
+    width: auto;
+    animation: none;
+  }
+  .list {
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    padding: 0 16px;
+    gap: 10px;
+  }
+  .copy {
+    display: none;
+  }
 }

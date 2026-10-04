@@ -19,28 +19,30 @@ export interface Service extends Feature {
 
 export interface Tool {
   name: string
-  category: 'pcb' | '3d'
+  category: 'pcb' | '3d' | 'cad' | 'engine'
   logo?: string
   color?: string
 }
 
 export const site = {
   name: 'engivexlab', // written in lowercase everywhere, like the logo
-  logo: '/logo.svg', // file in front-end/public/
+  logo: '/logo.png', // file in front-end/public/ (also used as the browser-tab icon: favicon-32.png)
 
   /**
    * Landing-page hero (top of the page).
    *   highlight  part of the title shown in italics, highlight colour (must appear in title)
+   *   highlightOnNewLine  true = the highlighted words always start on a new line
    *   image      picture in front-end/public/. Its moving parts are placed in HeroEffects.tsx
    *              (positions in picture pixels), so update those if you change the picture.
    *   chips      short facts under the buttons
    */
   hero: {
-    eyebrow: 'Now hiring experts',
-    title: 'Shape the tools behind every board, model & character.',
-    highlight: 'board, model & character.',
+    eyebrow: 'AI agents × human experts',
+    title: 'Help AI agents work like experts.',
+    highlight: 'work like experts.',
+    highlightOnNewLine: true, // start the highlighted words on a new line
     subtitle:
-      'We test CAD & 3D design plugins and create expert AI-training data. Join our remote team of engineers, designers and annotators — paid per task.',
+      'Use your PCB, CAD or 3D skills to evaluate AI work, create expert examples and get paid for project-based contributions.',
     primaryCta: 'Join our team',
     secondaryCta: 'See open roles',
     chips: ['PCB & product CAD', '3D & character design', 'AI training data'],
@@ -51,22 +53,24 @@ export const site = {
   },
 
   /**
-   * Tools shown in the scrolling strip under the hero image.
+   * Tools in the scrolling strip under the hero ("Works with the tools you already know").
    *   name      shown on the pill
-   *   category  'pcb' or '3d' — picks the fallback icon and the small label
-   *   logo      optional image in front-end/public/tools/, e.g. '/tools/kicad.svg'.
-   *             Use the official logo from each company's brand/press page.
-   *             Logos are shown in grey and turn to full colour on hover.
-   *   color     optional hover colour (e.g. the brand colour). Default: site teal.
-   * Add as many as you like — the strip scrolls forever.
+   *   category  'pcb' | '3d' | 'cad' | 'engine' — picks the small icon on the pill
+   *   logo      the official logo, a file in front-end/public/tools/ (get it from the company's
+   *             brand / press page). Until the file is there, the pill shows a small stand-in icon.
+   *   color     colour of the icon (e.g. the brand colour)
+   * Add as many as you like — the strip scrolls forever (it stops while the mouse is over it).
    */
   toolsHeading: 'Works with the tools you already know',
   tools: [
-    { name: 'Altium Designer', category: 'pcb', logo: '', color: '' },
-    { name: 'KiCAD', category: 'pcb', logo: '', color: '' },
-    { name: 'Blender 3D', category: '3d', logo: '', color: '' },
-    { name: 'Allegro', category: 'pcb', logo: '', color: '' },
-    { name: 'Maya', category: '3d', logo: '', color: '' },
+    { name: 'KiCAD', category: 'pcb', logo: '/tools/kicad.svg', color: '#314cb0' },
+    { name: 'Altium Designer', category: 'pcb', logo: '/tools/altium.svg', color: '#a07b2c' },
+    { name: 'Allegro', category: 'pcb', logo: '/tools/allegro.svg', color: '#c8102e' },
+    { name: 'Blender 3D', category: '3d', logo: '/tools/blender.svg', color: '#e87d0d' },
+    { name: 'Maya', category: '3d', logo: '/tools/maya.svg', color: '#1a9fb5' },
+    { name: '3D MAX', category: '3d', logo: '/tools/3dsmax.svg', color: '#0b8ea5' },
+    { name: 'Unity', category: 'engine', logo: '/tools/unity.svg', color: '#222c37' },
+    { name: 'Solid Works', category: 'cad', logo: '/tools/solidworks.svg', color: '#da291c' },
   ] as Tool[],
 
   /**
@@ -107,66 +111,83 @@ export const site = {
   joinCta: 'Join our team', // header button (logged out) -> sign-up
 
   /**
-   * "Our services": 4 cards on the landing page, full sections on /services.
-   * icon: 'annotation' | 'ai_training' | 'evaluation' | 'qa' | 'pcb' | '3d' | 'character'
+   * "What we do": 4 cards on the landing page (with one link under them), full sections on /services.
+   * icon: 'evaluation' | 'demo' | 'qa' | 'annotation' | 'ai_training' | 'pcb' | '3d' | 'character'
    */
   servicesSection: {
     badge: 'What we do',
-    title: 'Our services',
-    subtitle: 'Expert QA for design tools and high-quality data for AI — delivered by specialists who know the domain.',
-    pageTitle: 'Our services',
-    pageSubtitle: 'High-quality testing, data and evaluation services that make design tools and AI models better.',
+    title: 'How we improve AI agents',
+    subtitle:
+      'Our experts help evaluate, train and improve AI agents that work inside professional engineering and 3D software.',
+    cta: { label: 'See how our evaluation process works', to: '/services' }, // link under the cards
+    pageTitle: 'How we improve AI agents',
+    pageSubtitle:
+      'Our experts help evaluate, train and improve AI agents that work inside professional engineering and 3D software.',
   },
   services: [
     {
-      id: 'qa-testing',
-      icon: 'qa',
-      title: 'Plugin QA testing',
-      text: 'Hands-on testing of CAD, PCB and 3D plugins by engineers and artists who use the tools every day.',
+      id: 'agent-evaluation',
+      icon: 'evaluation',
+      title: 'AI agent evaluation',
+      text: 'Review whether an agent completed a PCB, CAD or 3D task correctly, efficiently and safely.',
       details:
-        'Our testers run real projects in KiCAD, Altium, Allegro, Blender and Maya, follow structured test plans and report issues with clear steps, files and screenshots.',
-      bullets: ['Regression & release testing', 'Usability and workflow feedback', 'Clear, reproducible bug reports'],
+        'Experts replay what an AI agent did inside the real tool, check the result against professional standards and score each step: was the task completed, was it done the right way, and did anything break along the way.',
+      bullets: ['Task completion and correctness', 'Efficiency of the steps taken', 'Safety: no damaged files or settings'],
+      image: '/services/evaluation.svg',
+    },
+    {
+      id: 'expert-demonstrations',
+      icon: 'demo',
+      title: 'Expert demonstrations',
+      text: 'Create high-quality examples that show how professionals use Altium, KiCAD, Blender and Maya.',
+      details:
+        'Engineers and artists record how they actually solve real tasks — from routing a board to rigging a character — with clear steps and reasoning, so agents learn the professional way of working.',
+      bullets: ['Step-by-step task recordings', 'Real projects in professional tools', 'Explained decisions, not just clicks'],
+      image: '/services/ai-data.svg',
+    },
+    {
+      id: 'plugin-qa',
+      icon: 'qa',
+      title: 'Environment & plugin QA',
+      text: 'Test the integrations that allow AI agents to interact reliably with professional software.',
+      details:
+        'We test the plugins and environments that connect AI agents to KiCAD, Altium, Allegro, Blender and Maya, follow structured test plans and report issues with clear steps, files and screenshots.',
+      bullets: ['Integration and regression testing', 'Reliability across tool versions', 'Clear, reproducible bug reports'],
       image: '/services/qa.svg',
     },
     {
       id: 'data-annotation',
       icon: 'annotation',
-      title: 'Data annotation',
-      text: 'Accurate labels for images, video, text, audio and 3D data — at the quality AI needs.',
+      title: 'Data annotation & review',
+      text: 'Label and structure agent actions, outputs and multimodal data for evaluation and training.',
       details:
-        'We label images, videos, text, audio and 3D/CAD data, including object detection, segmentation, classification and labelling of schematics and models.',
-      bullets: ['Image & video annotation', 'Text & audio labelling', 'Bounding boxes, polygons, masks'],
+        'We label and organise what agents see and do — screenshots, designs, 3D models, action logs and results — so the data can be used to evaluate and train them.',
+      bullets: ['Agent action and output labelling', 'Images, 3D models and design files', 'Consistent review guidelines'],
       image: '/services/annotation.svg',
-    },
-    {
-      id: 'ai-training-data',
-      icon: 'ai_training',
-      title: 'AI training data',
-      text: 'Expert-written datasets for training and fine-tuning models, including engineering and design tasks.',
-      details:
-        'Domain experts create high-quality, structured datasets for model training and fine-tuning: engineering problems, design tasks, step-by-step solutions and conversations.',
-      bullets: ['Curated and cleaned data', 'Domain-specific datasets (EE, CAD, 3D)', 'LLM training data'],
-      image: '/services/ai-data.svg',
-    },
-    {
-      id: 'ai-evaluation',
-      icon: 'evaluation',
-      title: 'AI/LLM evaluation',
-      text: 'Expert review of model answers: ratings, rankings, prompt testing and red-teaming.',
-      details:
-        'We evaluate model outputs, test prompts and measure performance so your models are accurate, safe and genuinely useful to professionals.',
-      bullets: ['Response evaluation', 'Prompt testing', 'Human preference ranking'],
-      image: '/services/evaluation.svg',
     },
   ] as Service[],
 
-  /** "Why work with us?" (landing page). icon: 'clock' | 'pay' | 'book' | 'users' */
-  whySection: { badge: 'For our experts', title: 'Why work with us?' },
+  /**
+   * "Why your expertise matters" (landing page): numbered cards.
+   * icon: 'monitor' | 'cube' | 'wallet' | 'clock' | 'pay' | 'book' | 'users' | 'eye' | 'target' | 'shield' | 'heart'
+   */
+  whySection: { badge: '', title: 'Why your expertise matters' },
   why: [
-    { icon: 'clock', title: 'Flexible work', text: 'Work from home, on your own schedule.' },
-    { icon: 'pay', title: 'Competitive pay', text: 'Get paid for every completed task.' },
-    { icon: 'book', title: 'Training & support', text: 'Paid training and a team that answers your questions.' },
-    { icon: 'users', title: 'Global community', text: 'Join engineers, artists and annotators worldwide.' },
+    {
+      icon: 'monitor',
+      title: 'Review AI work',
+      text: 'Check whether an AI agent completed a PCB, CAD or 3D task correctly, and identify mistakes or missing steps.',
+    },
+    {
+      icon: 'cube',
+      title: 'Show the right workflow',
+      text: 'Create expert examples that demonstrate how professionals actually use the tools.',
+    },
+    {
+      icon: 'wallet',
+      title: 'Get paid for completed work',
+      text: "Contribute to eligible projects and earn based on the tasks you complete. You'll see the rate and requirements before accepting.",
+    },
   ] as Feature[],
 
   /** "Our hiring process" (landing page + Careers page). Keep 5 steps: they match the dashboard. */
@@ -250,5 +271,12 @@ export const site = {
   /** Worker portal (/portal) sidebar title. */
   portalTitle: 'Worker portal',
 
-  footerText: 'Expert testing and AI-training data for design tools.',
+  footerText:
+    'Bring your engineering, design or QA expertise to help AI agents become more capable, reliable and useful in real-world tools.',
+  /** Short facts under the footer text. icon: 'home' | 'project' | 'users' */
+  footerFacts: [
+    { icon: 'home', label: 'Remote' },
+    { icon: 'project', label: 'Project-based' },
+    { icon: 'users', label: 'Global community' },
+  ],
 }
