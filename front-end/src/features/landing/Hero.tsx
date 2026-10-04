@@ -5,8 +5,8 @@
  *                  parts of it move (HeroEffects.tsx) and the whole section behind it has a moving
  *                  background (HeroBackdrop.tsx). Both are off for visitors who prefer reduced motion.
  * All text and the image are set in src/config/site.ts → hero.
- *   "Join our team"     logged out → Sign-up dialog, logged in → Careers page
- *   "See open roles"    scrolls to the open-roles section
+ *   "Join as an Expert"     logged out → Sign-up dialog, logged in → Careers page
+ *   "See open opportunities"    scrolls to the open-roles section
  */
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../auth/useAuth'

@@ -1,6 +1,6 @@
 // Home page, top to bottom:
 //   hero + tool strip (together exactly one screen), our services, open roles (dark band),
-//   hiring process (white band), why work with us, feedback (white band), FAQ, "Join our team" banner.
+//   hiring process (white band), why work with us, feedback (white band), FAQ, "Join as an Expert" banner.
 // Sections are separated by space and full-width bands instead of boxes (see global.css .panel / .band).
 import { Faq } from '../features/landing/Faq'
 import { Hero } from '../features/landing/Hero'

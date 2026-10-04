@@ -43,8 +43,8 @@ export const site = {
     highlightOnNewLine: true, // start the highlighted words on a new line
     subtitle:
       'Use your PCB, CAD or 3D skills to evaluate AI work, create expert examples and get paid for project-based contributions.',
-    primaryCta: 'Join our team',
-    secondaryCta: 'See open roles',
+    primaryCta: 'Join as an Expert',
+    secondaryCta: 'See open opportunities',
     chips: ['PCB & product CAD', '3D & character design', 'AI training data'],
     image: '/hero-engivexlab.webp',
     alt: 'Experts at work on glass cards: a PCB board, a QA checklist, a 3D mesh part, an annotated cube and image labelling',
@@ -78,10 +78,10 @@ export const site = {
    */
   rolesSection: {
     badge: 'Current opportunities',
-    title: 'Choose work that fits your craft.',
+    title: 'Put your expertise to work.',
     subtitle:
-      'Short, focused testing tasks for PCB designers, hardware engineers, 3D modelers and character artists, with clear instructions and pay for every completed task.',
-    viewAll: 'View all roles',
+      'Join a global network of engineers, designers, and technical experts helping evaluate and improve AI for real-world engineering and design. Work on focused projects, choose opportunities that match your skills, and get paid for completed work.',
+    viewAll: 'Explore opportunities',
     maxShown: 3, // how many roles the home page lists; the rest are on the Careers page
   },
 
@@ -105,10 +105,10 @@ export const site = {
     { label: 'Home', to: '/' },
     { label: 'Services', to: '/services' },
     { label: 'Careers', to: '/careers' },
-    { label: 'About', to: '/about' },
+    { label: 'About us', to: '/about' },
     { label: 'Contact', to: '/about#contact' },
   ],
-  joinCta: 'Join our team', // header button (logged out) -> sign-up
+  joinCta: 'Join as an Expert', // header button (logged out) -> sign-up
 
   /**
    * "What we do": 4 cards on the landing page (with one link under them), full sections on /services.
@@ -116,53 +116,53 @@ export const site = {
    */
   servicesSection: {
     badge: 'What we do',
-    title: 'How we improve AI agents',
+    title: 'Training AI for Professional Design',
     subtitle:
-      'Our experts help evaluate, train and improve AI agents that work inside professional engineering and 3D software.',
+      'We work with engineering and 3D experts to evaluate and improve AI agents that create professional designs. From PCB design to 3D modeling, our experts test AI-generated work, evaluate the tools and plugins behind it, and provide feedback that makes AI more capable and reliable.',
     cta: { label: 'See how our evaluation process works', to: '/services' }, // link under the cards
     pageTitle: 'How we improve AI agents',
     pageSubtitle:
-      'Our experts help evaluate, train and improve AI agents that work inside professional engineering and 3D software.',
+      'Our engineering and design experts evaluate AI agents on real-world tasks, test the tools they use, and provide expert feedback to improve their accuracy, reliability, and professional performance.',
   },
   services: [
     {
       id: 'agent-evaluation',
       icon: 'evaluation',
       title: 'AI agent evaluation',
-      text: 'Review whether an agent completed a PCB, CAD or 3D task correctly, efficiently and safely.',
+      text: 'Evaluate AI agents on real-world engineering and design tasks. Assess whether their work is accurate, efficient, reliable, and aligned with professional standards.',
       details:
-        'Experts replay what an AI agent did inside the real tool, check the result against professional standards and score each step: was the task completed, was it done the right way, and did anything break along the way.',
-      bullets: ['Task completion and correctness', 'Efficiency of the steps taken', 'Safety: no damaged files or settings'],
+        'Experts evaluate how AI agents perform real-world tasks inside professional design software. They review the agent’s actions and final results against defined requirements and professional standards, identifying errors, inefficient steps, and workflow issues.',
+      bullets: ['Task completion and accuracy', 'Quality and Efficiency of the workflow', 'Errors, unexpected behavior, and failures', 'File and project integrity'],
       image: '/services/evaluation.svg',
     },
     {
       id: 'expert-demonstrations',
       icon: 'demo',
-      title: 'Expert demonstrations',
-      text: 'Create high-quality examples that show how professionals use Altium, KiCAD, Blender and Maya.',
+      title: 'Expert workflows',
+      text: 'Create professional reference examples that demonstrate how experienced engineers and designers perform tasks using tools such as Altium, KiCad, Blender, and Maya.',
       details:
-        'Engineers and artists record how they actually solve real tasks — from routing a board to rigging a character — with clear steps and reasoning, so agents learn the professional way of working.',
-      bullets: ['Step-by-step task recordings', 'Real projects in professional tools', 'Explained decisions, not just clicks'],
+        'Engineers and designers create high-quality examples of real-world tasks in professional software—from routing a PCB to modeling and rigging a 3D character. These examples capture the steps, decisions, and workflows experts use in practice.',
+      bullets: ['Step-by-step expert workflows', 'Real tasks in professional software', 'Decisions and reasoning, not just actions'],
       image: '/services/ai-data.svg',
     },
     {
       id: 'plugin-qa',
       icon: 'qa',
       title: 'Environment & plugin QA',
-      text: 'Test the integrations that allow AI agents to interact reliably with professional software.',
+      text: 'Test the software environments, plugins, and integrations that AI agents rely on. Identify compatibility issues, bugs, and workflow limitations to ensure reliable agent performance.',
       details:
-        'We test the plugins and environments that connect AI agents to KiCAD, Altium, Allegro, Blender and Maya, follow structured test plans and report issues with clear steps, files and screenshots.',
-      bullets: ['Integration and regression testing', 'Reliability across tool versions', 'Clear, reproducible bug reports'],
+        'We test the plugins, integrations, and software environments that AI agents rely on to work with tools such as KiCad, Altium, Allegro, Blender, and Maya. Using structured test plans, we identify issues and document them with clear, reproducible evidence.',
+      bullets: ['Integration and regression testing', 'Compatibility across software versions', 'Clear, reproducible issue reports'],
       image: '/services/qa.svg',
     },
     {
       id: 'data-annotation',
       icon: 'annotation',
-      title: 'Data annotation & review',
-      text: 'Label and structure agent actions, outputs and multimodal data for evaluation and training.',
+      title: 'Data annotation & quality review',
+      text: 'Annotate and review AI agent actions, outputs, and multimodal data to create high-quality datasets for training, evaluation, and continuous improvement.',
       details:
-        'We label and organise what agents see and do — screenshots, designs, 3D models, action logs and results — so the data can be used to evaluate and train them.',
-      bullets: ['Agent action and output labelling', 'Images, 3D models and design files', 'Consistent review guidelines'],
+        'Experts label, classify, and review AI-generated actions and outputs to create reliable datasets for training and evaluating AI agents. Tasks may include reviewing design files, screenshots, 3D models, action sequences, and final results.',
+      bullets: ['Action and output annotation', 'Multimodal design data', 'Quality control and consistency'],
       image: '/services/annotation.svg',
     },
   ] as Service[],
@@ -175,41 +175,46 @@ export const site = {
   why: [
     {
       icon: 'monitor',
-      title: 'Review AI work',
-      text: 'Check whether an AI agent completed a PCB, CAD or 3D task correctly, and identify mistakes or missing steps.',
+      title: 'Evaluate AI work',
+      text: 'Review AI-generated PCB, CAD, and 3D work. Identify errors, missing steps, and areas where the AI agent can improve.',
     },
     {
       icon: 'cube',
-      title: 'Show the right workflow',
-      text: 'Create expert examples that demonstrate how professionals actually use the tools.',
+      title: 'Provide expert workflows',
+      text: 'Demonstrate how experienced professionals approach real-world design tasks using industry-standard tools and workflows.',
     },
     {
       icon: 'wallet',
-      title: 'Get paid for completed work',
-      text: "Contribute to eligible projects and earn based on the tasks you complete. You'll see the rate and requirements before accepting.",
+      title: 'Get paid for your expertise',
+      text: "Complete eligible projects and earn based on the work you deliver. You'll see the requirements, scope, and compensation before accepting a task.",
     },
   ] as Feature[],
 
   /** "Our hiring process" (landing page + Careers page). Keep 5 steps: they match the dashboard. */
-  hiringSection: { badge: 'How it works', title: 'Our hiring process' },
+  hiringSection: {
+    badge: 'How it works',
+    title: 'From application to project work.',
+    subtitle:
+      'A simple process to qualify, verify, and connect skilled professionals with AI evaluation and training projects.',
+  },
   hiringSteps: [
-    { title: 'Apply', text: 'Fill in the online application.' },
-    { title: 'Qualification test', text: 'A short test of your skills.' },
-    { title: 'ID verification', text: 'We confirm who you are.' },
-    { title: 'Training', text: 'Paid onboarding and guidelines.' },
-    { title: 'Project work', text: 'Start working and earning.' },
+    { title: 'Apply', text: 'Tell us about your skills, experience, and areas of expertise.' },
+    { title: 'Qualification test', text: 'Complete a short practical task to demonstrate your skills.' },
+    { title: 'ID verification', text: 'Complete a short practical task to demonstrate your skills.' },
+    { title: 'Onboarding', text: 'Review project guidelines, tools, and evaluation standards. Paid onboarding may be provided for eligible projects.' },
+    { title: 'Project work', text: 'Get matched with relevant projects, complete tasks, and get paid for your work.' },
   ],
 
   /** Dark banner near the bottom of the landing page. */
   joinBanner: {
-    title: 'Join our team',
-    text: 'Help build better design tools and better AI. Apply today and become part of our growing team of testers, annotators and AI evaluators.',
-    cta: 'View open positions',
+    title: 'Join our expert network',
+    text: 'Help shape better AI for professional engineering and design. Apply to work on focused evaluation, testing, and training projects as part of our growing network of engineers, designers, and AI evaluators.',
+    cta: 'View open opportunities',
   },
 
   /** Careers page (/careers). icon: 'monitor' | 'language' | 'eye' | 'target' */
   careers: {
-    title: 'Join our team',
+    title: 'Join as an Expert',
     subtitle: 'Flexible opportunities. Meaningful work. Help shape the tools and the AI of tomorrow.',
     positionsTitle: 'Open positions',
     skillsTitle: 'Required skills',
@@ -220,7 +225,7 @@ export const site = {
       { icon: 'target', title: 'Reliability', text: '' },
     ] as Feature[],
     ctaTitle: 'Ready to get started?',
-    ctaText: 'Apply today and take the first step toward a rewarding opportunity.',
+    ctaText: 'Put your expertise to work and help improve AI agents for real-world engineering and design. Apply today to join our expert network.',
   },
 
   /** Apply page (/apply). */
@@ -237,7 +242,7 @@ export const site = {
       'A team of engineers and artists building better design tools — and a better AI future — through careful testing, high-quality data and human expertise.',
     missionTitle: 'Our mission',
     mission:
-      'To help build better design tools and AI by providing expert testing, high-quality data and evaluation services, while creating meaningful, flexible work for skilled people around the world.',
+      'To help build better AI and design tools through expert evaluation, rigorous testing, and high-quality data—while creating meaningful project opportunities for skilled professionals around the world.',
     missionImage: '/about/mission.svg',
     missionCaption: 'Better data. Better tools. Brighter future.',
     valuesTitle: 'Our values',
@@ -249,7 +254,7 @@ export const site = {
     ] as Feature[],
     teamTitle: 'Our team',
     team:
-      'We are a diverse team of engineers, 3D artists and AI specialists. Together with our community of testers and annotators, we deliver work our clients can rely on — and create opportunities for talented people worldwide.',
+      'We are a multidisciplinary team of engineers, 3D artists, and AI specialists working together to build better AI for professional engineering and design. Alongside our global network of expert contributors, we evaluate AI agents, test professional tools and workflows, and produce high-quality data that helps improve AI performance.',
     teamImage: '/about/team.svg',
   },
 
@@ -272,11 +277,11 @@ export const site = {
   portalTitle: 'Worker portal',
 
   footerText:
-    'Bring your engineering, design or QA expertise to help AI agents become more capable, reliable and useful in real-world tools.',
+    'Join our global network of engineers, designers, and technical experts working on AI evaluation, testing, and training for professional engineering and design tools.',
   /** Short facts under the footer text. icon: 'home' | 'project' | 'users' */
   footerFacts: [
     { icon: 'home', label: 'Remote' },
     { icon: 'project', label: 'Project-based' },
-    { icon: 'users', label: 'Global community' },
+    { icon: 'users', label: 'Global expert network' },
   ],
 }

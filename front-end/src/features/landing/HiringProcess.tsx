@@ -10,7 +10,13 @@ import { HiringSteps } from '../hiring/HiringSteps'
 export function HiringProcess({ band = false }: { band?: boolean }) {
   const content = (
     <>
-      <SectionHeading eyebrow={site.hiringSection.badge} title={site.hiringSection.title} id="hiring-heading" center />
+      <SectionHeading
+        eyebrow={site.hiringSection.badge}
+        title={site.hiringSection.title}
+        subtitle={site.hiringSection.subtitle}
+        id="hiring-heading"
+        center
+      />
       <HiringSteps />
     </>
   )

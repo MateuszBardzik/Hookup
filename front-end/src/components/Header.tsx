@@ -1,6 +1,6 @@
 /**
  * Top bar with the navigation (links from config/site.ts → nav).
- *   Logged out: nav links, Login, "Join our team" (opens the login / sign-up dialogs)
+ *   Logged out: nav links, Login, "Join as an Expert" (opens the login / sign-up dialogs)
  *   Logged in:  nav links, Dashboard, user-name menu (Dashboard, Profile, Log out)
  * On small screens the links fold into a ☰ menu.
  */

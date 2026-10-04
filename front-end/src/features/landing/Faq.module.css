@@ -51,14 +51,14 @@
   border-radius: var(--radius-md);
 }
 
-/* "+" that turns into "×" when open */
+/* "+" that turns into "−" when open: the vertical bar turns flat */
 .toggle {
   position: relative;
   flex-shrink: 0;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  transition: transform 0.25s ease, background-color 0.25s ease;
+  transition: background-color 0.25s ease;
 }
 .toggle::before,
 .toggle::after {
@@ -74,9 +74,10 @@
 }
 .toggle::after {
   transform: translate(-50%, -50%) rotate(90deg);
+  transition: transform 0.25s ease;
 }
-.item[open] .toggle {
-  transform: rotate(45deg);
+.item[open] .toggle::after {
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 
 .answer {

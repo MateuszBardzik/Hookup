@@ -1,4 +1,4 @@
-/** Dark "Join our team" banner (landing page). Text: config/site.ts → joinBanner. Button → Careers page. */
+/** Dark "Join as an Expert" banner (landing page). Text: config/site.ts → joinBanner. Button → Careers page. */
 import { Link } from 'react-router-dom'
 import { site } from '../../config/site'
 import styles from './Sections.module.css'
