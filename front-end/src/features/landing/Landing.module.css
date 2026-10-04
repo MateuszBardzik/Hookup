@@ -235,6 +235,16 @@
     font-size: 14px;
   }
 }
+/* very narrow phones: the two buttons don't fit side by side, so stack them */
+@media (max-width: 400px) {
+  .actions {
+    flex-direction: column;
+  }
+  .cta {
+    flex: none;
+    width: 100%;
+  }
+}
 
 /* Very short screens (phone held sideways): let the page scroll normally */
 @media (max-height: 540px) {

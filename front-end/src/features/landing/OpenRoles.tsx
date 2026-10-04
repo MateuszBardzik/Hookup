@@ -82,7 +82,7 @@ export function OpenRoles() {
           </ol>
           {more > 0 && (
             <button className={styles.moreRoles} onClick={goToRoles}>
-              + {more} more {more === 1 ? 'role' : 'roles'} — see all on the Careers page →
+              + {more} more {more === 1 ? 'opportunity' : 'opportunities'} — see all on the Careers page →
             </button>
           )}
         </div>
