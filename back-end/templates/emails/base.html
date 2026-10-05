@@ -1,0 +1,37 @@
+{% comment %}
+  Shared layout of all HTML emails: logo + site name on top, white card, footer with the support address.
+  Other emails extend it and fill  {% block content %}.  Text is inline-styled because email apps ignore <style>.
+  Logo: templates/emails/logo.png, embedded in each email (config/mail.py → attach_logo).
+{% endcomment %}<!doctype html>
+<html>
+  <body style="margin:0;padding:32px 16px;background:#f7f7fd;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px">
+            <tr>
+              <td style="padding:0 4px 18px">
+                <a href="{{ site_url }}" style="text-decoration:none;color:#0f172a">
+                  <img src="{{ logo_url }}" width="44" height="32" alt=""
+                       style="vertical-align:middle;border:0;outline:none">
+                  <span style="vertical-align:middle;font-size:20px;font-weight:bold;letter-spacing:-0.3px;padding-left:8px">{{ site_name }}</span>
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td style="background:#ffffff;border:1px solid #e6e3f3;border-radius:16px;padding:32px">
+                {% block content %}{% endblock %}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:18px 4px 0;font-size:12px;line-height:1.6;color:#8a8fa3">
+                {% block footer %}Questions? Write to <a href="mailto:{{ support_email }}" style="color:#4f35e6">{{ support_email }}</a>.{% endblock %}<br>
+                © {% now "Y" %} {{ site_name }} · <a href="{{ site_url }}" style="color:#8a8fa3">{{ site_url }}</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

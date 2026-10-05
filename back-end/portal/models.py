@@ -1,6 +1,6 @@
 """
 Worker portal data (the dashboard testers see after logging in).
-All rows are created by admins on the admin pages (/admin/).
+All rows are created by admins on the admin pages (/hookup/).
 
     TrainingModule      a lesson (link to a doc/video) everyone in the Training step should do
     TrainingCompletion  a user clicked "Mark as done" on a module

@@ -1,0 +1,9 @@
+{% extends "emails/base.html" %}
+{% comment %} Email written by the support team on the admin pages (mailing app). {% endcomment %}
+{% block content %}
+<div style="font-size:15px;line-height:1.65;color:#334155">
+  {{ message|linebreaks }}
+</div>
+<p style="margin:24px 0 0;font-size:15px;color:#334155">— The {{ site_name }} team</p>
+{% endblock %}
+{% block footer %}You can reply to this email or write to <a href="mailto:{{ support_email }}" style="color:#4f35e6">{{ support_email }}</a>.{% endblock %}

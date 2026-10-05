@@ -142,7 +142,7 @@ class AuthApiTests(TestCase):
 
 
 class AdminPagesTests(TestCase):
-    """/admin/ is only for users with is_admin = True."""
+    """/hookup/ is only for users with is_admin = True."""
 
     def setUp(self):
         self.admin = User.objects.create_user(email="boss@example.com", password="Admin-pass-123", is_admin=True)
@@ -151,43 +151,43 @@ class AdminPagesTests(TestCase):
     def test_admin_can_open_every_table(self):
         self.client.force_login(self.admin)
         for url in [
-            "/admin/",
-            "/admin/accounts/user/",
-            "/admin/accounts/user/add/",
-            f"/admin/accounts/user/{self.tester.pk}/change/",
-            "/admin/positions/position/",
-            "/admin/positions/position/add/",
-            "/admin/positions/application/",
-            "/admin/testimonials/testimonial/",
-            "/admin/testimonials/testimonial/add/",
-            "/admin/faqs/faq/",
-            "/admin/faqs/faq/add/",
-            "/admin/positions/application/add/",
-            "/admin/portal/project/",
-            "/admin/portal/project/add/",
-            "/admin/portal/task/",
-            "/admin/portal/task/add/",
-            "/admin/portal/trainingmodule/",
-            "/admin/portal/trainingcompletion/",
-            "/admin/contact/contactmessage/",
+            "/hookup/",
+            "/hookup/accounts/user/",
+            "/hookup/accounts/user/add/",
+            f"/hookup/accounts/user/{self.tester.pk}/change/",
+            "/hookup/positions/position/",
+            "/hookup/positions/position/add/",
+            "/hookup/positions/application/",
+            "/hookup/testimonials/testimonial/",
+            "/hookup/testimonials/testimonial/add/",
+            "/hookup/faqs/faq/",
+            "/hookup/faqs/faq/add/",
+            "/hookup/positions/application/add/",
+            "/hookup/portal/project/",
+            "/hookup/portal/project/add/",
+            "/hookup/portal/task/",
+            "/hookup/portal/task/add/",
+            "/hookup/portal/trainingmodule/",
+            "/hookup/portal/trainingcompletion/",
+            "/hookup/contact/contactmessage/",
         ]:
             self.assertEqual(self.client.get(url).status_code, 200, url)
 
     def test_tester_is_sent_to_login(self):
         self.client.force_login(self.tester)
-        self.assertEqual(self.client.get("/admin/").status_code, 302)
+        self.assertEqual(self.client.get("/hookup/").status_code, 302)
 
     def test_login_form_checks_is_admin(self):
-        ok = self.client.post("/admin/login/", {"username": "boss@example.com", "password": "Admin-pass-123"})
+        ok = self.client.post("/hookup/login/", {"username": "boss@example.com", "password": "Admin-pass-123"})
         self.assertEqual(ok.status_code, 302)
         self.client.logout()
-        bad = self.client.post("/admin/login/", {"username": "tester@example.com", "password": "Tester-pass-123"})
+        bad = self.client.post("/hookup/login/", {"username": "tester@example.com", "password": "Tester-pass-123"})
         self.assertContains(bad, "not an admin")
 
     def test_admin_can_add_a_user(self):
         self.client.force_login(self.admin)
         response = self.client.post(
-            "/admin/accounts/user/add/",
+            "/hookup/accounts/user/add/",
             {
                 "email": "new@example.com",
                 "first_name": "New",
@@ -224,6 +224,22 @@ class MailgunBackendTests(TestCase):
         self.assertEqual(kwargs["data"]["to"], ["a@b.com"])
         self.assertEqual(kwargs["data"]["text"], "plain")
         self.assertEqual(kwargs["data"]["html"], "<b>hi</b>")
+
+    def test_inline_logo_is_sent_as_inline_file(self):
+        from django.core.mail import EmailMultiAlternatives
+
+        from config.mail import attach_logo
+
+        msg = EmailMultiAlternatives("Hi", "plain", "a@mg.example.com", ["a@b.com"])
+        msg.attach_alternative('<img src="cid:logo.png">', "text/html")
+        attach_logo(msg)
+        response = mock.Mock(status_code=200, text="")
+        with mock.patch("config.mailgun_backend.requests.post", return_value=response) as post:
+            msg.send()
+        files = post.call_args.kwargs["files"]
+        self.assertEqual(files[0][0], "inline")
+        self.assertEqual(files[0][1][0], "logo.png")
+        self.assertTrue(files[0][1][1].startswith(b"\x89PNG"))
 
     def test_api_error_raises(self):
         with self.assertRaises(RuntimeError):

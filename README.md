@@ -5,7 +5,7 @@ builds AI-training data. Experts read about the services, apply to open position
 hiring process (Apply → Qualification test → ID verification → Training → Project work) and then
 work in the worker portal (projects, tasks, payments).
 
-Pages: Home · Services · Careers · About (+ contact form) · Apply · Worker portal (/portal) · Admin (/admin).
+Pages: Home · Services · Careers · About (+ contact form) · Apply · Worker portal (/portal) · Admin (/hookup).
 
 ```
 Hookup/          (project folder; the website is called engivexlab)
@@ -46,7 +46,7 @@ Vite forwards `/api` and `/media` to Django, so both must be running.
 
 ## Managing data: admin pages
 
-Open **http://127.0.0.1:8000/admin/** (the Django back-end, not port 5173) and log in with an
+Open **http://127.0.0.1:8000/hookup/** (the Django back-end, not port 5173) and log in with an
 admin's email and password. Only users with `is_admin` = 1 can open it; they can view, add, edit and
 delete everything: users, positions, applications, training, projects, tasks, contact messages, feedback cards and FAQ entries (all database fields).
 Lists can be searched and filtered, and `is_active` / `sort_order` can be changed straight from the list.
@@ -132,7 +132,7 @@ The website replaces the placeholders with the logged-in user's details when the
 | Worker portal: sidebar menu | `front-end/src/features/portal/PortalLayout.tsx` (`PORTAL_MENU`) |
 | Worker portal pages | `front-end/src/pages/portal/` (Open positions = `PositionsPage.tsx`; `ProfilePage.tsx` for the profile, field list at the top) |
 | API calls from the website | `front-end/src/api/` |
-| Admin pages (/admin/) | see "Managing data: admin pages" above |
+| Admin pages (/hookup/) — address: `back-end/config/settings.py` → `ADMIN_URL` | see "Managing data: admin pages" above |
 | Database tables | `back-end/*/models.py` → then `python manage.py makemigrations` and `migrate` |
 | API endpoints | `back-end/*/views.py` + `urls.py` |
 
@@ -174,6 +174,24 @@ another network, or — simplest — the Mailgun HTTP API above, which doesn't u
 The same applies to `SMTPServerDisconnected: Connection unexpectedly closed` (something on the network or an
 antivirus "mail shield" cuts the SMTP connection).
 
+## Support emails (admin → Emails to users)
+
+The support team can email users from the admin pages (**/hookup/** → *Support emails* → *Add*):
+
+1. Write a **subject** and **message** (plain text; an empty line starts a new paragraph; `{name}` becomes the
+   person's first name).
+2. Choose **Send to**: selected users · all users with a verified email · all active users · everyone who applied
+   (to one position or to any). The page shows who will get it after you save.
+3. **Save and send a test to me** — only you get it (subject starts with `[TEST]`).
+4. **Save and send to all recipients** — everyone gets a personal copy (nobody sees the other addresses). Sending
+   runs in the background; refresh the page to see *Sent* and the counts. A sent email can't be changed or sent again.
+
+Shortcut: on *Users*, tick people → action **Write an email to the selected users**.
+Replies go to `SUPPORT_EMAIL` (default `support@engivexlab.com`, set in `.env`). All emails (also sign-up
+verification) use the layout with the logo in `back-end/templates/emails/base.html`; the logo is loaded from
+`<FRONTEND_URL>/logo.png`, so it shows once the site is online. Code: `back-end/mailing/`.
+With a Mailgun *sandbox* domain, only authorized recipients receive emails.
+
 ## Google / Apple login
 
 Both buttons are fully wired but stay disabled until you add keys to `back-end/.env`
@@ -194,7 +212,7 @@ GitHub repo (`MateuszBardzik/Hookup`, branch `main`). Files in `deploy/`:
 | `server-setup.sh` | **Once, on the server.** Installs Python tools, Node.js 22, nginx, certbot; creates the app user `engivex`; writes the live `.env`; sets up the app service, nginx and firewall; builds; gets the HTTPS certificate |
 | `update.sh` | `git pull`, then installs packages, migrates the database, builds the website, restarts |
 | `engivexlab.service` | Runs Django with gunicorn (systemd service) |
-| `nginx.conf` | Serves the website, sends `/api/` and `/admin/` to Django, serves `/static/` and `/media/` |
+| `nginx.conf` | Serves the website, sends `/api/` and `/hookup/` (admin) to Django, serves `/static/` and `/media/` |
 | `env.production.example` | Template of the live `back-end/.env` |
 | `upload.cmd` | Alternative without GitHub: copies the project from your PC with `scp` |
 
@@ -237,6 +255,6 @@ and `media` with `scp` into `/srv/engivexlab/app/back-end/`, then run `bash /srv
 | GET / POST | `/api/positions/applications/` (my applications / the Apply form) | yes |
 | GET | `/api/portal/summary/` · `/api/portal/training/` · `/api/portal/projects/` · `/api/portal/tasks/` | yes |
 | POST | `/api/portal/training/<id>/complete/` · `/api/portal/tasks/<id>/submit/` | yes |
-| — | `/admin/` (admin pages, in the browser) | admin email + password |
+| — | `/hookup/` (admin pages, in the browser) | admin email + password |
 
 Logged-in requests send the header `Authorization: Token <token>`.

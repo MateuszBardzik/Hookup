@@ -9,6 +9,8 @@ Turned on automatically when MAILGUN_API_KEY is set in .env (see settings.py).
 Everything that calls Django's send_mail() keeps working unchanged.
 """
 
+from email.mime.base import MIMEBase
+
 import requests
 from django.conf import settings
 from django.core.mail.backends.base import BaseEmailBackend
@@ -50,8 +52,25 @@ class MailgunBackend(BaseEmailBackend):
             url,
             auth=("api", settings.MAILGUN_API_KEY),
             data=data,
+            files=self._files(message) or None,
             timeout=settings.EMAIL_TIMEOUT,
         )
         if response.status_code >= 400:
             # e.g. 401 wrong API key, 404 wrong domain/region, 403 sandbox recipient not authorised
             raise RuntimeError(f"Mailgun API error {response.status_code}: {response.text[:300]}")
+
+    @staticmethod
+    def _files(message):
+        """Attachments for Mailgun. Images with a Content-ID go as "inline" (shown inside the HTML via cid:)."""
+        files = []
+        for item in message.attachments:
+            if isinstance(item, MIMEBase):
+                cid = (item.get("Content-ID") or "").strip("<>")
+                name = cid or item.get_filename() or "attachment"
+                files.append(("inline" if cid else "attachment", (name, item.get_payload(decode=True), item.get_content_type())))
+            else:
+                filename, content, mimetype = item
+                if isinstance(content, str):
+                    content = content.encode()
+                files.append(("attachment", (filename, content, mimetype or "application/octet-stream")))
+        return files
