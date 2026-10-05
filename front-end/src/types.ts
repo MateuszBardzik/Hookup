@@ -56,6 +56,7 @@ export interface Position {
   location: string
   countries: string
   pay: string
+  is_active: boolean // true when the position has a qualification test link (set on the admin pages)
 }
 
 /** Hiring steps, in order (back-end: positions/models.py -> Application.Stage). */

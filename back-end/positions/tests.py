@@ -86,13 +86,19 @@ class ApplicationApiTests(TestCase):
     def test_required_fields_terms_and_resume_type(self):
         res = self.client.post(
             "/api/positions/applications/",
-            apply_form(self.kicad, motivation="", agreed_terms="false", resume=SimpleUploadedFile("x.exe", b"MZ")),
+            apply_form(
+                self.kicad, related_experience="", agreed_terms="false", resume=SimpleUploadedFile("x.exe", b"MZ")
+            ),
             format="multipart",
         )
         self.assertEqual(res.status_code, 400)
-        self.assertIn("motivation", res.data)
+        self.assertIn("related_experience", res.data)
         self.assertIn("agreed_terms", res.data)
         self.assertIn("resume", res.data)
+
+    def test_motivation_is_optional(self):
+        res = self.client.post("/api/positions/applications/", apply_form(self.kicad, motivation=""), format="multipart")
+        self.assertEqual(res.status_code, 201)
 
     def test_applicant_cannot_set_own_stage(self):
         res = self.client.post("/api/positions/applications/", apply_form(self.kicad, stage=5), format="multipart")
@@ -126,3 +132,13 @@ class ApplicationApiTests(TestCase):
         other = User.objects.create_user("bob@example.com", "Str0ng-pass-123")
         Application.objects.create(user=other, position=self.kicad)
         self.assertEqual(self.client.get("/api/positions/applications/").data, [])
+
+
+class PositionActiveFlagTests(TestCase):
+    def test_is_active_follows_test_link_without_revealing_it(self):
+        Position.objects.create(title="With test", test_form_url="https://forms.gle/abc")
+        Position.objects.create(title="No test yet")
+        data = {p["title"]: p for p in APIClient().get("/api/positions/").data}
+        self.assertTrue(data["With test"]["is_active"])
+        self.assertFalse(data["No test yet"]["is_active"])
+        self.assertNotIn("test_form_url", data["With test"])

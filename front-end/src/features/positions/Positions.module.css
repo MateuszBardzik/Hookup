@@ -29,6 +29,7 @@
 
 /* ---------- Card (Careers page) ---------- */
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -41,6 +42,23 @@
 }
 .card:hover {
   border-color: var(--color-primary);
+}
+
+/* top-right circle: green = active position, grey outline = not active yet (PositionCard.tsx) */
+.activeDot {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #cbd2dd;
+  border-radius: 50%;
+  background: transparent;
+}
+.isActive {
+  border-color: #fff;
+  background: #22c55e;
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.45), 0 0 0 5px rgba(34, 197, 94, 0.14);
 }
 
 .cardTitle {

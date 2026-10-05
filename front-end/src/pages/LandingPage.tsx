@@ -9,6 +9,7 @@ import { HiringProcess } from '../features/landing/HiringProcess'
 import { JoinBanner } from '../features/landing/JoinBanner'
 import styles from '../features/landing/Landing.module.css'
 import { OpenRoles } from '../features/landing/OpenRoles'
+import { ScrollCue } from '../features/landing/ScrollCue'
 import { ServicesSection } from '../features/landing/ServicesSection'
 import { Testimonials } from '../features/landing/Testimonials'
 import { ToolStream } from '../features/landing/ToolStream'
@@ -24,10 +25,11 @@ export function LandingPage() {
           <div className={`container ${styles.heroWrap}`}>
             <Hero />
           </div>
+          <ScrollCue />
         </div>
         <ToolStream />
       </div>
-      <div className="container">
+      <div className="container" data-after-fold>
         <ServicesSection />
       </div>
       <div className="band-spacer" />

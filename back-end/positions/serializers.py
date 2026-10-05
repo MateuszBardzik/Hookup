@@ -6,7 +6,8 @@ from .prefill import personalize_form_url
 
 class PositionSerializer(serializers.ModelSerializer):
     """Everything the Careers page and the details popup show. Public (no login needed).
-    The qualification test link is NOT here: it is only sent with an application (see below)."""
+    The qualification test link is NOT here: it is only sent with an application (see below).
+    `is_active` only says whether a test link is set (= the position is active), not what it is."""
 
     category_label = serializers.CharField(source="get_category_display", read_only=True)
     employment_type_label = serializers.CharField(source="get_employment_type_display", read_only=True)
@@ -15,6 +16,7 @@ class PositionSerializer(serializers.ModelSerializer):
     responsibilities = serializers.SerializerMethodField()
     requirements = serializers.SerializerMethodField()
     why_apply = serializers.SerializerMethodField()
+    is_active = serializers.SerializerMethodField()
 
     class Meta:
         model = Position
@@ -37,7 +39,12 @@ class PositionSerializer(serializers.ModelSerializer):
             "location",
             "countries",
             "pay",
+            "is_active",
         ]
+
+    def get_is_active(self, obj):
+        """Active = the admin has set the qualification test (Google Form) link."""
+        return bool(obj.test_form_url)
 
     def get_highlights(self, obj):
         return lines(obj.highlights)
@@ -96,7 +103,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
         # applicant's account / profile when the application is created (see create()).
         read_only_fields = read_only_fields + ["full_name", "email", "phone", "location"]
         extra_kwargs = {
-            "motivation": {"required": True, "allow_blank": False},
+            "related_experience": {"required": True, "allow_blank": False},  # "Why do you want to join us?" is optional
             "availability": {"required": True, "allow_blank": False},
             "resume": {"write_only": False},
         }

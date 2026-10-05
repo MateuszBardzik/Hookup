@@ -1,0 +1,81 @@
+/* "Scroll to explore": bottom centre of the hero area (just above the tool stream) */
+.cue {
+  position: absolute;
+  bottom: clamp(10px, 2.2vh, 22px);
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  transform: translateX(-50%);
+  transition: opacity 0.35s ease, color 0.2s;
+}
+.cue:hover {
+  color: var(--color-primary);
+}
+.cue:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.arrow {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+  border-radius: 50%;
+  background: color-mix(in srgb, #fff 80%, transparent);
+  color: var(--color-primary);
+  box-shadow: 0 6px 16px rgba(79, 53, 230, 0.12);
+  animation: nudge 1.8s ease-in-out infinite;
+}
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+
+/* phones: just the arrow, no label */
+@media (max-width: 600px) {
+  .label {
+    display: none;
+  }
+  .arrow {
+    width: 30px;
+    height: 30px;
+  }
+}
+/* very short screens (phone sideways): the page scrolls normally, no cue needed */
+@media (max-height: 540px) {
+  .cue {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arrow {
+    animation: none;
+  }
+}
