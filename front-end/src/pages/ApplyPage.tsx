@@ -144,7 +144,7 @@ function ApplyForm({
           options={positions.map((p) => ({ value: p.id, label: p.title }))}
         />
         <TextArea
-          label="Related experience"
+          label="Related experience *"
           name="related_experience"
           value={form.related_experience}
           onChange={update}
@@ -172,7 +172,7 @@ function ApplyForm({
       <div className={styles.formCol}>
         <h2>Additional information</h2>
         <TextArea
-          label="Why do you want to join us? *"
+          label="Why do you want to join us? (optional)"
           name="motivation"
           value={form.motivation}
           onChange={update}

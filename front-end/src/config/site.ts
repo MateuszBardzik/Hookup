@@ -61,6 +61,9 @@ export const site = {
    *   color     colour of the icon (e.g. the brand colour)
    * Add as many as you like — the strip scrolls forever (it stops while the mouse is over it).
    */
+  /** Small cue at the bottom of the first screen ('' = hidden); click scrolls to the next section */
+  scrollCue: 'Scroll to explore',
+
   toolsHeading: 'Works with the tools you already know',
   tools: [
     { name: 'KiCAD', category: 'pcb', logo: '/tools/kicad.svg', color: '#314cb0' },
