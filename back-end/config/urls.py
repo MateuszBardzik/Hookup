@@ -8,7 +8,8 @@ Top-level URL map. Every API route lives under /api/.
     /api/faqs/          -> faqs/urls.py       (landing-page FAQ)
     /api/portal/...     -> portal/urls.py     (worker portal: dashboard, training, projects, tasks)
     /api/contact/       -> contact/urls.py    (About page contact form)
-    /admin/             -> admin pages to manage the database (users with is_admin = 1)
+    /hookup/            -> admin pages to manage the database (users with is_admin = 1)
+                           (address set in settings.py -> ADMIN_URL)
     /media/...          -> uploaded files (development only)
 """
 
@@ -19,7 +20,7 @@ from django.urls import include, path
 from .admin_site import admin_site
 
 urlpatterns = [
-    path("admin/", admin_site.urls),
+    path(settings.ADMIN_URL, admin_site.urls),
     path("api/", include("accounts.urls")),
     path("api/positions/", include("positions.urls")),
     path("api/testimonials/", include("testimonials.urls")),

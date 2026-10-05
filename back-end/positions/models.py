@@ -10,7 +10,7 @@ def lines(text: str) -> list[str]:
 class Position(models.Model):
     """
     A role people can apply for, e.g. "KiCAD Expert" or "AI Evaluator".
-    Add / edit rows on the admin pages (/admin/) or with a database tool.
+    Add / edit rows on the admin pages (/hookup/) or with a database tool.
 
     Careers page card:          category (icon), title, outline, highlights (check list), pay, location
     Details popup:              + employment_type, countries, description, responsibilities, requirements,

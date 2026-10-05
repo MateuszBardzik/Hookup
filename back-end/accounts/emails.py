@@ -6,7 +6,7 @@ Email verification for sign-up.
 
 The link works once and expires after settings.PASSWORD_RESET_TIMEOUT (Django default: 3 days).
 How emails are sent (console in development, SMTP for real inboxes) is set in .env — see settings.py.
-Email text: templates/emails/verify_email.txt and .html.
+Email text: templates/emails/verify_email.txt and .html (layout with the logo: emails/base.html).
 """
 
 import logging
@@ -14,10 +14,12 @@ import logging
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+
+from config.mail import attach_logo, email_context
 
 
 class EmailVerificationTokenGenerator(PasswordResetTokenGenerator):
@@ -53,18 +55,20 @@ def send_verification_email(user) -> bool:
 
 def _send(user) -> None:
     context = {
+        **email_context(),  # logo, site name and address (config/mail.py)
         "name": user.first_name or user.email,
         "link": verification_link(user),
-        "site_name": settings.SITE_NAME,
         "days": round(settings.PASSWORD_RESET_TIMEOUT / 86400),
     }
-    send_mail(
+    message = EmailMultiAlternatives(
         subject=f"Verify your email for {settings.SITE_NAME}",
-        message=render_to_string("emails/verify_email.txt", context),
-        html_message=render_to_string("emails/verify_email.html", context),
+        body=render_to_string("emails/verify_email.txt", context),
         from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[user.email],
+        to=[user.email],
     )
+    message.attach_alternative(render_to_string("emails/verify_email.html", context), "text/html")
+    attach_logo(message)
+    message.send()
 
 
 def user_from_link(uid: str, token: str):

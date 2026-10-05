@@ -35,7 +35,7 @@ if env_bool("DJANGO_HTTPS", False):
     CSRF_COOKIE_SECURE = True
 
 INSTALLED_APPS = [
-    # Django (admin pages at /admin/, see config/admin_site.py)
+    # Django (admin pages at /hookup/, see config/admin_site.py)
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "faqs",
     "portal",
     "contact",
+    "mailing",
 ]
 
 MIDDLEWARE = [
@@ -131,6 +132,9 @@ APPLE_REDIRECT_URI = os.getenv("APPLE_REDIRECT_URI", "")
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 SITE_NAME = os.getenv("SITE_NAME", "engivexlab")
 
+# Address of the admin pages: https://<site>/hookup/ (if you change it, also change deploy/nginx.conf)
+ADMIN_URL = "hookup/"
+
 # ---- Sending email (sign-up verification) ----
 # Pick ONE way to send (first one that is filled in wins):
 #   1. Mailgun HTTP API  - set MAILGUN_API_KEY + MAILGUN_DOMAIN (HTTPS, works even where SMTP is blocked)
@@ -158,6 +162,12 @@ _default_sender = (
     else EMAIL_HOST_USER or "no-reply@localhost"
 )
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL") or f"{SITE_NAME} <{_default_sender}>"
+# Support emails written on the admin pages (Emails to users): replies go to this address
+SUPPORT_EMAIL = os.getenv("SUPPORT_EMAIL", "support@engivexlab.com")
+# Public address of the website, shown in email footers (also when emails are sent from a PC)
+PUBLIC_SITE_URL = os.getenv("PUBLIC_SITE_URL", "https://engivexlab.com")
+# True = send support emails before the page answers (used by the tests); False = in the background
+MAILING_SEND_NOW = False
 # Verification links expire after this many seconds (3 days)
 PASSWORD_RESET_TIMEOUT = 60 * 60 * 24 * 3
 

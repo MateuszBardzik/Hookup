@@ -4,7 +4,7 @@ from django.db import models
 class Faq(models.Model):
     """
     One question + answer in the FAQ section of the landing page.
-    Add / edit rows on the admin pages (/admin/) or with a database tool. Line breaks in `answer` are kept.
+    Add / edit rows on the admin pages (/hookup/) or with a database tool. Line breaks in `answer` are kept.
     """
 
     question = models.CharField(max_length=255)

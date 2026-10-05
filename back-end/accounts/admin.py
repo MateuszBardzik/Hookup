@@ -10,6 +10,8 @@ Admin page for users (testers and admins). All database fields are shown.
 """
 
 from django.contrib import admin
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
@@ -62,6 +64,15 @@ class UserAdmin(AdminOnlyModelAdmin, DjangoUserAdmin):
             },
         ),
     )
+
+    actions = ["write_email"]
+
+    @admin.action(description="Write an email to the selected users")
+    def write_email(self, request, queryset):
+        """Opens a new support email (Emails to users) with these users as recipients."""
+        ids = ",".join(str(pk) for pk in queryset.values_list("pk", flat=True))
+        url = reverse("admin:mailing_supportemail_add")
+        return HttpResponseRedirect(f"{url}?audience=selected&recipients={ids}")
 
     @admin.display(description="Role", ordering="is_admin")
     def role_label(self, obj):

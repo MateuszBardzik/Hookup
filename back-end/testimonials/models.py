@@ -4,7 +4,7 @@ from django.db import models
 class Testimonial(models.Model):
     """
     Feedback shown on the landing page ("What vendors and users say").
-    Add / edit rows on the admin pages (/admin/) or with a database tool.
+    Add / edit rows on the admin pages (/hookup/) or with a database tool.
     """
 
     class Kind(models.TextChoices):

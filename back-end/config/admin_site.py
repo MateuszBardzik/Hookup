@@ -1,5 +1,5 @@
 """
-The admin pages at /admin/ (Django admin), used to manage the database.
+The admin pages at /hookup/ (Django admin; address: settings.ADMIN_URL), used to manage the database.
 
 Who can log in: users with  is_admin = True  (and is_active = True).
 They can view, add, change and delete everything. Testers can't open it.
@@ -9,6 +9,7 @@ Each app registers its tables in its own admin.py:
     positions/admin.py     positions (+ old applications table)
     testimonials/admin.py  feedback cards
     faqs/admin.py          FAQ entries
+    mailing/admin.py       support emails to users
 The look (colours, logo) is in templates/admin/base_site.html.
 """
 
