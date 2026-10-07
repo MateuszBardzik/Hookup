@@ -63,14 +63,14 @@ export function AboutPage() {
               <a href={`mailto:${c.email}`}>{c.email}</a>
             </p>
           )}
-          {c.location && (
+          {/* {c.location && (
             <p className={styles.contactLine}>
               <span className={styles.contactIcon}>
                 <PinIcon size={20} />
               </span>
               {c.location}
             </p>
-          )}
+          )} */}
         </div>
         <ContactForm />
       </section>
