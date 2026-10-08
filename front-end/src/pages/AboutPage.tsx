@@ -1,5 +1,5 @@
 // /about — mission, values, team and the "Contact us" form. Text: config/site.ts → about, contact.
-import { FeatureIcon, MailIcon, PinIcon } from '../components/icons'
+import { FeatureIcon, MailIcon } from '../components/icons' // add PinIcon back if you show the location again
 import { PageHero } from '../components/PageHero'
 import { SectionHeading } from '../components/SectionHeading'
 import { site } from '../config/site'
