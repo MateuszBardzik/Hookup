@@ -7,7 +7,8 @@ Who receives it is chosen with `audience`:
     all          every active user
     applicants   everyone who applied (to `position`, or to any position when it's empty)
 Each person gets their own copy (nobody sees the other addresses). In the subject and message,
-{name} is replaced by the person's first name. Sending: mailing/sending.py.
+{name} is replaced by the person's first name. `format`: simple formatting or HTML
+(mailing/formatting.py). Sending: mailing/sending.py.
 """
 
 from django.conf import settings
@@ -22,6 +23,10 @@ class SupportEmail(models.Model):
         ALL = "all", "All active users"
         APPLICANTS = "applicants", "Everyone who applied (to the position below, or to any position)"
 
+    class Format(models.TextChoices):
+        MARKDOWN = "markdown", "Simple formatting (bold, links, lists, buttons)"
+        HTML = "html", "HTML (advanced)"
+
     class Status(models.TextChoices):
         DRAFT = "draft", "Draft"
         SENDING = "sending", "Sending…"
@@ -30,8 +35,10 @@ class SupportEmail(models.Model):
 
     subject = models.CharField(max_length=200)
     message = models.TextField(
-        help_text="Plain text. An empty line starts a new paragraph. {name} is replaced by the person's first name."
+        help_text="An empty line starts a new paragraph. {name} is replaced by the person's first name. "
+        "Formatting: see the help above."
     )
+    format = models.CharField(max_length=10, choices=Format.choices, default=Format.MARKDOWN)
     audience = models.CharField(max_length=12, choices=Audience.choices, default=Audience.SELECTED)
     recipients = models.ManyToManyField(
         settings.AUTH_USER_MODEL,

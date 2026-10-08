@@ -20,6 +20,7 @@ from django.utils import timezone
 
 from config.mail import attach_logo, email_context
 
+from .formatting import render_message
 from .models import SupportEmail
 
 logger = logging.getLogger(__name__)
@@ -27,7 +28,8 @@ logger = logging.getLogger(__name__)
 
 def build_message(email: SupportEmail, user, subject_prefix: str = "") -> EmailMultiAlternatives:
     name = user.first_name or "there"
-    context = {**email_context(), "message": email.message.replace("{name}", name)}
+    message_html, message_text = render_message(email.message, email.format, name)
+    context = {**email_context(), "message_html": message_html, "message_text": message_text}
     msg = EmailMultiAlternatives(
         subject=subject_prefix + email.subject.replace("{name}", name),
         body=render_to_string("emails/support_email.txt", context),

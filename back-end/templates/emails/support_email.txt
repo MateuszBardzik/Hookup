@@ -1,4 +1,4 @@
-{% autoescape off %}{{ message }}
+{% autoescape off %}{{ message_text }}
 
 — The {{ site_name }} team
 

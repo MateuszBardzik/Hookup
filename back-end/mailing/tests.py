@@ -36,6 +36,7 @@ class SupportEmailTests(TestCase):
             self.add_url(),
             {
                 "subject": "News for {name}",
+                "format": "markdown",
                 "message": "Hello {name},\n\nNew projects are open.",
                 "audience": "selected",
                 "recipients": [self.ann.pk, self.bob.pk],
@@ -55,12 +56,12 @@ class SupportEmailTests(TestCase):
         self.assertEqual(to_ann.attachments[0].get("Content-ID"), "<logo.png>")
         self.assertIn("https://engivexlab.com", html)  # public address in the footer, never localhost
         self.assertNotIn("localhost", html)
-        self.assertIn("<p>Hello Ann,</p>", html)
+        self.assertIn('<p style="margin:0 0 14px">Hello Ann,</p>', html)
 
     def test_test_email_goes_only_to_me_and_stays_draft(self):
         self.client.post(
             self.add_url(),
-            {"subject": "Hi", "message": "Test body", "audience": "all", "_send_test": "1"},
+            {"subject": "Hi", "format": "markdown", "message": "Test body", "audience": "all", "_send_test": "1"},
         )
         email = SupportEmail.objects.get()
         self.assertEqual(email.status, "draft")
@@ -85,3 +86,41 @@ class SupportEmailTests(TestCase):
     def test_testers_cannot_open_it(self):
         self.client.force_login(self.bob)
         self.assertEqual(self.client.get(self.add_url()).status_code, 302)  # to the admin login
+
+
+class FormattingTests(TestCase):
+    def render(self, message, fmt="markdown", name="Ann"):
+        from .formatting import render_message
+
+        return render_message(message, fmt, name)
+
+    def test_plain_text_keeps_paragraphs_and_line_breaks(self):
+        html, text = self.render("Hello {name},\nsecond line\n\nNew paragraph")
+        self.assertIn("Hello Ann,<br />", html)
+        self.assertEqual(html.count("<p "), 2)
+        self.assertEqual(text, "Hello Ann,\nsecond line\n\nNew paragraph")
+
+    def test_bold_links_lists_and_button(self):
+        html, text = self.render(
+            "**Big news**\n\n- one\n- two\n\n[our site](https://engivexlab.com)\n\n"
+            "[button: Open your workspace](https://engivexlab.com/portal)"
+        )
+        self.assertIn("<strong>Big news</strong>", html)
+        self.assertIn('<ul style=', html)
+        self.assertIn('<a style="color:#4f35e6;text-decoration:underline" href="https://engivexlab.com">our site</a>', html)
+        self.assertIn('href="https://engivexlab.com/portal" style="display:inline-block;background:#4f35e6', html)
+        self.assertIn(">Open your workspace</a>", html)
+        button = html[html.index('href="https://engivexlab.com/portal"') - 20 :]
+        self.assertEqual(button[: button.index("</a>")].count("style="), 1)  # one style per tag
+        self.assertIn("Open your workspace: https://engivexlab.com/portal", text)
+
+    def test_html_typed_in_simple_mode_is_shown_as_text(self):
+        html, _ = self.render("<script>alert(1)</script> [x](javascript:alert(1))")
+        self.assertNotIn("<script>", html)
+        self.assertNotIn('href="javascript', html)
+
+    def test_html_format_used_as_is_with_safe_name(self):
+        html, text = self.render('<h1 style="color:red">Hi {name}</h1><p>Body</p>', fmt="html", name="<b>Al</b>")
+        self.assertIn('<h1 style="color:red">Hi &lt;b&gt;Al&lt;/b&gt;</h1>', html)
+        self.assertIn("Hi <b>Al</b>", text)  # plain-text version: tags removed, name as typed
+        self.assertIn("Body", text)

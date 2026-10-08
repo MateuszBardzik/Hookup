@@ -14,8 +14,20 @@ from django.utils.html import format_html, format_html_join
 
 from config.admin_site import AdminOnlyModelAdmin, admin_site
 
+from .formatting import render_message
 from .models import SupportEmail
 from .sending import send_test, start_sending
+
+# shown above the message box
+FORMAT_HELP = """
+<b>Simple formatting</b> (plain text works too):
+<code>**bold**</code> · <code>*italic*</code> · <code>[link text](https://…)</code> ·
+<code>- bullet</code> · <code>1. numbered</code> · <code>## Heading</code> ·
+button: <code>[button: Open your workspace](https://engivexlab.com/portal)</code> (on its own line) ·
+<code>{name}</code> = first name.<br>
+<b>HTML</b>: write the HTML yourself, with inline styles (<code>style="…"</code>); email apps ignore &lt;style&gt;.
+Save to see a preview below, or use “Save and send a test to me”.
+"""
 
 PREVIEW_LIMIT = 30  # names shown in "Recipients"
 
@@ -28,7 +40,7 @@ class SupportEmailAdmin(AdminOnlyModelAdmin):
     search_fields = ("subject", "message")
     autocomplete_fields = ("recipients", "position")
     fieldsets = (
-        ("Email", {"fields": ("subject", "message")}),
+        ("Email", {"fields": ("subject", "format", "message", "message_preview"), "description": FORMAT_HELP}),
         ("Send to", {"fields": ("audience", "recipients", "position", "recipient_preview")}),
         (
             "Status",
@@ -36,6 +48,7 @@ class SupportEmailAdmin(AdminOnlyModelAdmin):
         ),
     )
     readonly_fields = (
+        "message_preview",
         "recipient_preview",
         "status",
         "sent_at",
@@ -45,6 +58,24 @@ class SupportEmailAdmin(AdminOnlyModelAdmin):
         "created_by",
         "created_at",
     )
+
+    @admin.display(description="Preview")
+    def message_preview(self, obj):
+        if not obj or not obj.pk or not obj.message:
+            return "Save the email to see how the message will look."
+        markup, _ = render_message(obj.message, obj.format, "Ann")
+        # shown in a frame, so the admin page's own styles don't change how it looks
+        page = (
+            '<body style="margin:0;padding:20px 24px;background:#fff;'
+            f'font:15px/1.65 Arial,Helvetica,sans-serif;color:#334155">{markup}</body>'
+        )
+        return format_html(
+            '<iframe srcdoc="{}" title="Preview" sandbox="allow-same-origin" '
+            'style="width:600px;max-width:100%;min-height:120px;border:1px solid #e6e3f3;border-radius:12px;background:#fff" '
+            "onload=\"this.style.height=(this.contentDocument.body.scrollHeight+4)+'px'\"></iframe>"
+            '<div style="margin-top:6px;color:#8a8fa3;font-size:12px">{{name}} shown as “Ann”.</div>',
+            page,
+        )
 
     @admin.display(description="Who will get it")
     def recipient_preview(self, obj):
@@ -59,13 +90,15 @@ class SupportEmailAdmin(AdminOnlyModelAdmin):
         return format_html("<strong>{} people:</strong> {}{}", count, names, more)
 
     def get_fieldsets(self, request, obj=None):
-        if obj is None:  # new email: no status yet
-            return self.fieldsets[:2]
+        if obj is None:  # new email: no preview or status yet
+            email, send_to = self.fieldsets[0], self.fieldsets[1]
+            fields = tuple(f for f in email[1]["fields"] if f != "message_preview")
+            return ((email[0], {**email[1], "fields": fields}), send_to)
         return self.fieldsets
 
     def get_readonly_fields(self, request, obj=None):
         if obj and obj.status != SupportEmail.Status.DRAFT:  # sent: everything read-only
-            return ("subject", "message", "audience", "recipients", "position", *self.readonly_fields)
+            return ("subject", "format", "message", "audience", "recipients", "position", *self.readonly_fields)
         return self.readonly_fields
 
     def save_model(self, request, obj, form, change):

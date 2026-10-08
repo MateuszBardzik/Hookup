@@ -178,8 +178,12 @@ antivirus "mail shield" cuts the SMTP connection).
 
 The support team can email users from the admin pages (**/hookup/** → *Support emails* → *Add*):
 
-1. Write a **subject** and **message** (plain text; an empty line starts a new paragraph; `{name}` becomes the
-   person's first name).
+1. Write a **subject** and **message**; `{name}` becomes the person's first name. **Format**:
+   - *Simple formatting* (default; plain text works too): `**bold**`, `*italic*`, `[link text](https://…)`,
+     `- bullets`, `1. numbered`, `## Heading`, and a button on its own line:
+     `[button: Open your workspace](https://engivexlab.com/portal)`. HTML typed here is shown as text.
+   - *HTML*: your own HTML, with inline `style="…"` (email apps ignore `<style>` blocks).
+   After saving, a **Preview** shows how the message will look. Code: `back-end/mailing/formatting.py`.
 2. Choose **Send to**: selected users · all users with a verified email · all active users · everyone who applied
    (to one position or to any). The page shows who will get it after you save.
 3. **Save and send a test to me** — only you get it (subject starts with `[TEST]`).
