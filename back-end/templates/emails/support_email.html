@@ -2,11 +2,11 @@
 {% comment %}
   Email written by the support team on the admin pages (mailing app).
   message_html = their message, already turned into styled HTML by mailing/formatting.py.
+  Nothing is added after the message: no sign-off and no footer, so the team writes their own.
 {% endcomment %}
 {% block content %}
 <div style="font-size:15px;line-height:1.65;color:#334155">
   {{ message_html|safe }}
 </div>
-<p style="margin:24px 0 0;font-size:15px;color:#334155">— The {{ site_name }} team</p>
 {% endblock %}
-{% block footer %}You can reply to this email or write to <a href="mailto:{{ support_email }}" style="color:#4f35e6">{{ support_email }}</a>.{% endblock %}
+{% block footer_row %}{% endblock %}

@@ -26,6 +26,7 @@ FORMAT_HELP = """
 button: <code>[button: Open your workspace](https://engivexlab.com/portal)</code> (on its own line) ·
 <code>{name}</code> = first name.<br>
 <b>HTML</b>: write the HTML yourself, with inline styles (<code>style="…"</code>); email apps ignore &lt;style&gt;.
+Nothing is added after your message (no sign-off, no footer), so end it the way you like.<br>
 Save to see a preview below, or use “Save and send a test to me”.
 """
 

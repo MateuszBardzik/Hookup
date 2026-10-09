@@ -192,8 +192,9 @@ The support team can email users from the admin pages (**/hookup/** → *Support
 
 Shortcut: on *Users*, tick people → action **Write an email to the selected users**.
 Replies go to `SUPPORT_EMAIL` (default `support@engivexlab.com`, set in `.env`). All emails (also sign-up
-verification) use the layout with the logo in `back-end/templates/emails/base.html`; the logo is loaded from
-`<FRONTEND_URL>/logo.png`, so it shows once the site is online. Code: `back-end/mailing/`.
+verification) use the layout with the logo in `back-end/templates/emails/base.html`; the logo is embedded in each
+email. Support emails end with your message: no sign-off and no footer are added, so write your own (the
+verification email keeps its footer). Code: `back-end/mailing/`.
 With a Mailgun *sandbox* domain, only authorized recipients receive emails.
 
 ## Google / Apple login

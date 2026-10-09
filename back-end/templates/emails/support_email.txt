@@ -1,6 +1,2 @@
 {% autoescape off %}{{ message_text }}
-
-— The {{ site_name }} team
-
-{{ site_url }} · Questions? Reply to this email or write to {{ support_email }}.
 {% endautoescape %}

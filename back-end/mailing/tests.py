@@ -54,8 +54,12 @@ class SupportEmailTests(TestCase):
         html = to_ann.alternatives[0][0]
         self.assertIn('src="cid:logo.png"', html)  # logo embedded in the email itself
         self.assertEqual(to_ann.attachments[0].get("Content-ID"), "<logo.png>")
-        self.assertIn("https://engivexlab.com", html)  # public address in the footer, never localhost
+        self.assertIn('href="https://engivexlab.com"', html)  # logo links to the public site, never localhost
         self.assertNotIn("localhost", html)
+        # nothing added after the message: no sign-off, no footer
+        self.assertNotIn("team</p>", html)
+        self.assertNotIn("©", html)
+        self.assertEqual(to_ann.body.strip(), "Hello Ann,\n\nNew projects are open.")
         self.assertIn('<p style="margin:0 0 14px">Hello Ann,</p>', html)
 
     def test_test_email_goes_only_to_me_and_stays_draft(self):
