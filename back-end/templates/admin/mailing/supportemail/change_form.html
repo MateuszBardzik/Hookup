@@ -1,5 +1,46 @@
 {% extends "admin/change_form.html" %}
-{% comment %} Support email page: adds "send a test to me" and "send to all recipients" buttons (mailing/admin.py). {% endcomment %}
+{% comment %}
+  Support email page (mailing/admin.py). Adds:
+    - "Reuse for a new email" (top right of an existing email)
+    - on a new email: "Start from a previous email" (loads an earlier email's subject and message)
+    - "Save and send a test to me" and "Save and send to all recipients" buttons
+{% endcomment %}
+{% block object-tools-items %}
+  {% if reuse_url %}<li><a href="{{ reuse_url }}">Reuse for a new email</a></li>{% endif %}
+  {{ block.super }}
+{% endblock %}
+
+{% block form_top %}
+  {% if add %}
+    <div style="margin:0 0 16px;padding:12px 16px;border:1px solid #e6e3f3;border-radius:10px;background:#f7f7fd">
+      <label for="start-from" style="font-weight:bold;margin-right:8px">Start from a previous email:</label>
+      <select id="start-from" style="max-width:100%">
+        <option value="">— new email (example text) —</option>
+        {% for e in previous_emails %}
+          <option value="{{ e.pk }}"{% if copy_from == e.pk|stringformat:"s" %} selected{% endif %}>
+            {{ e.subject }} · {% if e.sent_at %}sent {{ e.sent_at|date:"M j, Y" }}{% else %}{{ e.get_status_display|lower }}{% endif %}
+          </option>
+        {% endfor %}
+      </select>
+      {% if reuse_source %}
+        <div style="margin-top:8px;color:#475569">
+          Reusing <a href="{% url 'admin:mailing_supportemail_change' reuse_source.pk %}">{{ reuse_source.subject }}</a>.
+          With “Skip people who already got it” ticked, anyone who received it (or an earlier copy) is left out.
+        </div>
+      {% endif %}
+      <div style="margin-top:6px;color:#8a8fa3;font-size:12px">Picking an email replaces the subject and message below.</div>
+    </div>
+    <script>
+      document.getElementById('start-from').addEventListener('change', function () {
+        var url = new URL(window.location.href);
+        if (this.value) url.searchParams.set('copy_from', this.value);
+        else url.searchParams.delete('copy_from');
+        window.location.href = url.toString();  // keeps other settings, e.g. recipients from the Users page
+      });
+    </script>
+  {% endif %}
+{% endblock %}
+
 {% block submit_buttons_bottom %}
   {% if is_draft %}
     <div class="submit-row" style="gap:10px">

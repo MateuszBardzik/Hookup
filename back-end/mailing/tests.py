@@ -36,8 +36,7 @@ class SupportEmailTests(TestCase):
             self.add_url(),
             {
                 "subject": "News for {name}",
-                "format": "markdown",
-                "message": "Hello {name},\n\nNew projects are open.",
+                "message": '<p style="margin:0 0 14px">Hello {name},</p>\n<p>New projects are <a href="https://engivexlab.com/positions">open</a>.</p>',
                 "audience": "selected",
                 "recipients": [self.ann.pk, self.bob.pk],
                 "_send_all": "1",
@@ -59,13 +58,13 @@ class SupportEmailTests(TestCase):
         # nothing added after the message: no sign-off, no footer
         self.assertNotIn("team</p>", html)
         self.assertNotIn("©", html)
-        self.assertEqual(to_ann.body.strip(), "Hello Ann,\n\nNew projects are open.")
+        self.assertEqual(to_ann.body.strip(), "Hello Ann,\n\nNew projects are open (https://engivexlab.com/positions).")
         self.assertIn('<p style="margin:0 0 14px">Hello Ann,</p>', html)
 
     def test_test_email_goes_only_to_me_and_stays_draft(self):
         self.client.post(
             self.add_url(),
-            {"subject": "Hi", "format": "markdown", "message": "Test body", "audience": "all", "_send_test": "1"},
+            {"subject": "Hi", "message": "<p>Test body</p>", "audience": "all", "_send_test": "1"},
         )
         email = SupportEmail.objects.get()
         self.assertEqual(email.status, "draft")
@@ -92,39 +91,94 @@ class SupportEmailTests(TestCase):
         self.assertEqual(self.client.get(self.add_url()).status_code, 302)  # to the admin login
 
 
+@override_settings(MAILING_SEND_NOW=True)
+class ReuseTests(TestCase):
+    def setUp(self):
+        self.admin = User.objects.create_user(email="boss@example.com", password="Admin-pass-123", is_admin=True)
+        self.ann = User.objects.create_user(email="ann@example.com", password="x-Pass-12345", email_verified=True)
+        self.client.force_login(self.admin)
+        self.original = SupportEmail.objects.create(subject="Welcome {name}", message="<p>Hello</p>", audience="verified")
+        self.client.post(f"/hookup/mailing/supportemail/{self.original.pk}/change/", {
+            "subject": "Welcome {name}", "message": "<p>Hello</p>", "audience": "verified", "_send_all": "1",
+        })
+        mail.outbox.clear()
+
+    def reuse(self, source, **extra):
+        data = {
+            "copied_from": source.pk, "subject": source.subject, "message": source.message,
+            "audience": "verified", "skip_already_received": "on", "_send_all": "1", **extra,
+        }
+        return self.client.post("/hookup/mailing/supportemail/add/", data)
+
+    def test_sending_records_who_received_it(self):
+        self.assertEqual(list(SupportEmail.objects.get(pk=self.original.pk).received_by.all()), [self.ann])
+
+    def test_reuse_page_is_filled_from_the_original(self):
+        page = self.client.get(f"/hookup/mailing/supportemail/add/?copy_from={self.original.pk}")
+        self.assertContains(page, 'value="Welcome {name}"')
+        self.assertContains(page, "&lt;p&gt;Hello&lt;/p&gt;")
+        self.assertContains(page, "Skip people who already got it")
+        self.assertContains(page, "Start from a previous email")
+        # the original's page has the button
+        original_page = self.client.get(f"/hookup/mailing/supportemail/{self.original.pk}/change/")
+        self.assertContains(original_page, f"add/?copy_from={self.original.pk}")
+
+    def test_reuse_keeps_recipients_from_users_page(self):
+        page = self.client.get(
+            f"/hookup/mailing/supportemail/add/?audience=selected&recipients={self.ann.pk}&copy_from={self.original.pk}"
+        )
+        self.assertContains(page, 'value="Welcome {name}"')
+        self.assertContains(page, f'<option value="{self.ann.pk}" selected>')
+
+    def test_copy_goes_only_to_new_people_and_series_grows(self):
+        newbie = User.objects.create_user(email="new@example.com", password="x-Pass-12345", email_verified=True)
+        self.reuse(self.original)
+        self.assertEqual([m.to for m in mail.outbox], [["new@example.com"]])
+        copy = SupportEmail.objects.exclude(pk=self.original.pk).get()
+        self.assertEqual((copy.copied_from, copy.sent_count), (self.original, 1))
+
+        # reusing the copy links to the original, and skips everyone who got any email of the series
+        mail.outbox.clear()
+        User.objects.create_user(email="newer@example.com", password="x-Pass-12345", email_verified=True)
+        self.reuse(copy)
+        self.assertEqual([m.to for m in mail.outbox], [["newer@example.com"]])
+        self.assertEqual(SupportEmail.objects.filter(copied_from=self.original).count(), 2)
+        self.assertNotIn(newbie, SupportEmail.objects.latest("created_at").recipient_users())
+
+    def test_without_skip_everyone_gets_it_again(self):
+        self.reuse(self.original, skip_already_received="")
+        self.assertEqual([m.to for m in mail.outbox], [["ann@example.com"]])
+
+    def test_list_action_opens_reuse_page(self):
+        response = self.client.post(
+            "/hookup/mailing/supportemail/", {"action": "reuse", "_selected_action": [self.original.pk]}
+        )
+        self.assertTrue(response["Location"].endswith(f"/add/?copy_from={self.original.pk}"))
+
+
 class FormattingTests(TestCase):
-    def render(self, message, fmt="markdown", name="Ann"):
+    def render(self, message, name="Ann"):
         from .formatting import render_message
 
-        return render_message(message, fmt, name)
+        return render_message(message, name)
 
-    def test_plain_text_keeps_paragraphs_and_line_breaks(self):
-        html, text = self.render("Hello {name},\nsecond line\n\nNew paragraph")
-        self.assertIn("Hello Ann,<br />", html)
-        self.assertEqual(html.count("<p "), 2)
-        self.assertEqual(text, "Hello Ann,\nsecond line\n\nNew paragraph")
+    def test_html_used_as_is_with_safe_name(self):
+        html, text = self.render('<h1 style="color:red">Hi {name}</h1><p>Body</p>', name="<b>Al</b>")
+        self.assertEqual(html, '<h1 style="color:red">Hi &lt;b&gt;Al&lt;/b&gt;</h1><p>Body</p>')
+        self.assertEqual(text, "Hi <b>Al</b>\n\nBody")  # plain-text version: tags removed, name as typed
 
-    def test_bold_links_lists_and_button(self):
-        html, text = self.render(
-            "**Big news**\n\n- one\n- two\n\n[our site](https://engivexlab.com)\n\n"
-            "[button: Open your workspace](https://engivexlab.com/portal)"
+    def test_plain_text_version_keeps_lines_and_link_addresses(self):
+        _, text = self.render(
+            '<p>Line one<br>line two</p>\n<p><a href="https://engivexlab.com/portal" style="x">Open it</a></p>'
+            '<p><a href="https://engivexlab.com">https://engivexlab.com</a> &amp; more</p>'
         )
-        self.assertIn("<strong>Big news</strong>", html)
-        self.assertIn('<ul style=', html)
-        self.assertIn('<a style="color:#4f35e6;text-decoration:underline" href="https://engivexlab.com">our site</a>', html)
-        self.assertIn('href="https://engivexlab.com/portal" style="display:inline-block;background:#4f35e6', html)
-        self.assertIn(">Open your workspace</a>", html)
-        button = html[html.index('href="https://engivexlab.com/portal"') - 20 :]
-        self.assertEqual(button[: button.index("</a>")].count("style="), 1)  # one style per tag
-        self.assertIn("Open your workspace: https://engivexlab.com/portal", text)
+        self.assertEqual(
+            text, "Line one\nline two\n\nOpen it (https://engivexlab.com/portal)\n\nhttps://engivexlab.com & more"
+        )
 
-    def test_html_typed_in_simple_mode_is_shown_as_text(self):
-        html, _ = self.render("<script>alert(1)</script> [x](javascript:alert(1))")
-        self.assertNotIn("<script>", html)
-        self.assertNotIn('href="javascript', html)
-
-    def test_html_format_used_as_is_with_safe_name(self):
-        html, text = self.render('<h1 style="color:red">Hi {name}</h1><p>Body</p>', fmt="html", name="<b>Al</b>")
-        self.assertIn('<h1 style="color:red">Hi &lt;b&gt;Al&lt;/b&gt;</h1>', html)
-        self.assertIn("Hi <b>Al</b>", text)  # plain-text version: tags removed, name as typed
-        self.assertIn("Body", text)
+    def test_new_email_starts_with_the_html_starter(self):
+        User.objects.create_user(email="boss@example.com", password="Admin-pass-123", is_admin=True)
+        self.client.login(email="boss@example.com", password="Admin-pass-123")
+        page = self.client.get("/hookup/mailing/supportemail/add/")
+        self.assertContains(page, "Hi {name},")
+        self.assertNotContains(page, "Simple formatting")

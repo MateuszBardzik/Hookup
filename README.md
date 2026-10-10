@@ -178,12 +178,11 @@ antivirus "mail shield" cuts the SMTP connection).
 
 The support team can email users from the admin pages (**/hookup/** → *Support emails* → *Add*):
 
-1. Write a **subject** and **message**; `{name}` becomes the person's first name. **Format**:
-   - *Simple formatting* (default; plain text works too): `**bold**`, `*italic*`, `[link text](https://…)`,
-     `- bullets`, `1. numbered`, `## Heading`, and a button on its own line:
-     `[button: Open your workspace](https://engivexlab.com/portal)`. HTML typed here is shown as text.
-   - *HTML*: your own HTML, with inline `style="…"` (email apps ignore `<style>` blocks).
-   After saving, a **Preview** shows how the message will look. Code: `back-end/mailing/formatting.py`.
+1. Write a **subject** and **message**; `{name}` becomes the person's first name. The message is **HTML** with
+   inline `style="…"` (email apps ignore `<style>` blocks). A new email starts with a small example (greeting,
+   paragraph, indigo button, sign-off) to edit. Nothing is added after your message, so write your own sign-off.
+   After saving, a **Preview** shows how it will look. The plain-text copy (for email apps without HTML) is made
+   automatically: tags removed, links written as `text (address)`. Code: `back-end/mailing/formatting.py`.
 2. Choose **Send to**: selected users · all users with a verified email · all active users · everyone who applied
    (to one position or to any). The page shows who will get it after you save.
 3. **Save and send a test to me** — only you get it (subject starts with `[TEST]`).
@@ -191,10 +190,16 @@ The support team can email users from the admin pages (**/hookup/** → *Support
    runs in the background; refresh the page to see *Sent* and the counts. A sent email can't be changed or sent again.
 
 Shortcut: on *Users*, tick people → action **Write an email to the selected users**.
+
+**Reusing an email** (e.g. the same welcome email for people who joined later): open any email → **Reuse for a
+new email** (top right), or tick one in the list → action *Reuse for a new email*. A new draft opens with the same
+subject, message and "Send to". **Skip people who already got it** (on by default) leaves out everyone who
+received the original or an earlier copy; *Who will get it* shows who is left. On a new email, **Start from a
+previous email** loads an earlier email's text and keeps the recipients you already picked (so it works with the
+Users-page shortcut too). Each sent email records who received it.
 Replies go to `SUPPORT_EMAIL` (default `support@engivexlab.com`, set in `.env`). All emails (also sign-up
 verification) use the layout with the logo in `back-end/templates/emails/base.html`; the logo is embedded in each
-email. Support emails end with your message: no sign-off and no footer are added, so write your own (the
-verification email keeps its footer). Code: `back-end/mailing/`.
+email. Support emails end with your message (no footer added); the verification email keeps its footer. Code: `back-end/mailing/`.
 With a Mailgun *sandbox* domain, only authorized recipients receive emails.
 
 ## Google / Apple login

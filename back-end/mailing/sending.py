@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 def build_message(email: SupportEmail, user, subject_prefix: str = "") -> EmailMultiAlternatives:
     name = user.first_name or "there"
-    message_html, message_text = render_message(email.message, email.format, name)
+    message_html, message_text = render_message(email.message, name)
     context = {**email_context(), "message_html": message_html, "message_text": message_text}
     msg = EmailMultiAlternatives(
         subject=subject_prefix + email.subject.replace("{name}", name),
@@ -66,6 +66,7 @@ def _send_all(email_id: int) -> None:
         for user in email.recipient_users().iterator():
             try:
                 connection.send_messages([build_message(email, user)])
+                email.received_by.add(user)
                 sent += 1
             except Exception:  # one bad address must not stop the others
                 logger.exception("Support email %s: could not send to %s", email_id, user.email)
