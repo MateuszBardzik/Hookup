@@ -86,6 +86,16 @@ class SupportEmailTests(TestCase):
         page = self.client.get(response["Location"])
         self.assertContains(page, "Save and send to all recipients")
 
+    def test_live_preview_on_new_and_saved_emails(self):
+        page = self.client.get(self.add_url())
+        self.assertContains(page, 'id="email-preview"')  # new email: preview shown before saving
+        self.assertContains(page, "data-marker=")
+        self.assertContains(page, "data:image/png;base64,")  # logo shown in the preview
+        email = SupportEmail.objects.create(subject="Hi {name}", message="<p>Hello {name}</p>", audience="all")
+        page = self.client.get(f"/hookup/mailing/supportemail/{email.pk}/change/")
+        self.assertContains(page, '<strong id="email-preview-subject">Hi Ann</strong>')
+        self.assertContains(page, "Hello Ann")
+
     def test_testers_cannot_open_it(self):
         self.client.force_login(self.bob)
         self.assertEqual(self.client.get(self.add_url()).status_code, 302)  # to the admin login

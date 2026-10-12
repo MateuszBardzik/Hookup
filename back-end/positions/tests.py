@@ -100,6 +100,12 @@ class ApplicationApiTests(TestCase):
         res = self.client.post("/api/positions/applications/", apply_form(self.kicad, motivation=""), format="multipart")
         self.assertEqual(res.status_code, 201)
 
+    def test_cannot_apply_to_position_without_test_link(self):
+        waiting = Position.objects.create(title="Maya Expert", outline="x")  # no test link yet = not active
+        res = self.client.post("/api/positions/applications/", apply_form(waiting), format="multipart")
+        self.assertEqual(res.status_code, 400)
+        self.assertIn("isn't accepting applications yet", str(res.data["position"]))
+
     def test_applicant_cannot_set_own_stage(self):
         res = self.client.post("/api/positions/applications/", apply_form(self.kicad, stage=5), format="multipart")
         self.assertEqual(res.data["stage"], 2)

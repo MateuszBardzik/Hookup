@@ -36,7 +36,7 @@ export function PositionCard({ position, onOpen, applied = false }: Props) {
         <button className={styles.more} onClick={onOpen}>
           View details
         </button>
-        {applied ? <AppliedLink /> : <ApplyButton positionId={position.id} />}
+        {applied ? <AppliedLink /> : <ApplyButton position={position} />}
       </div>
     </article>
   )

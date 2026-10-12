@@ -4,6 +4,8 @@
     - "Reuse for a new email" (top right of an existing email)
     - on a new email: "Start from a previous email" (loads an earlier email's subject and message)
     - "Save and send a test to me" and "Save and send to all recipients" buttons
+    - live preview: the Preview frame (mailing/admin.py → message_preview) updates while the subject or
+      message is edited, without saving
 {% endcomment %}
 {% block object-tools-items %}
   {% if reuse_url %}<li><a href="{{ reuse_url }}">Reuse for a new email</a></li>{% endif %}
@@ -39,6 +41,34 @@
       });
     </script>
   {% endif %}
+{% endblock %}
+
+{% block admin_change_form_document_ready %}
+  {{ block.super }}
+  <script>
+    (function () {
+      var frame = document.getElementById('email-preview');
+      var message = document.getElementById('id_message');
+      if (!frame || !message) return; // sent emails can't be edited: the saved preview stays
+      var subject = document.getElementById('id_subject');
+      var subjectOut = document.getElementById('email-preview-subject');
+      var name = frame.dataset.name;
+      var escapedName = name.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+      var timer;
+      function update() {
+        var html = message.value.split('{name}').join(escapedName);
+        frame.srcdoc = frame.dataset.shell.split(frame.dataset.marker).join(html);
+        if (subject && subjectOut) subjectOut.textContent = subject.value.split('{name}').join(name) || '—';
+      }
+      function later() {
+        clearTimeout(timer);
+        timer = setTimeout(update, 150);
+      }
+      message.addEventListener('input', later);
+      if (subject) subject.addEventListener('input', later);
+      update(); // also fills the preview on a new email
+    })();
+  </script>
 {% endblock %}
 
 {% block submit_buttons_bottom %}

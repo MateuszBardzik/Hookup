@@ -11,13 +11,17 @@ Once sent, an email can't be changed or sent again — reuse it instead:
 On the Users page, select users → action "Write an email to the selected users" opens a new email for them.
 """
 
+import base64
+
 from django import forms
 from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
+from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils.html import format_html, format_html_join
+from django.utils.html import escape, format_html, format_html_join
 
 from config.admin_site import AdminOnlyModelAdmin, admin_site
+from config.mail import LOGO_FILE, email_context
 
 from .formatting import render_message
 from .models import SupportEmail
@@ -28,7 +32,7 @@ FORMAT_HELP = """
 Write the message in <b>HTML</b>, with inline styles (<code>style="…"</code>) — email apps ignore &lt;style&gt;.
 <code>{name}</code> = the person's first name.
 Nothing is added after your message (no sign-off, no footer), so end it the way you like.<br>
-Save to see a preview below, or use “Save and send a test to me”.
+The preview below updates as you type; use “Save and send a test to me” to check it in your inbox.
 """
 
 # what a new email starts with (edit or replace it)
@@ -44,6 +48,16 @@ STARTER_MESSAGE = """<p style="margin:0 0 14px">Hi {name},</p>
 """
 
 PREVIEW_LIMIT = 30  # names shown in "Recipients"
+PREVIEW_NAME = "Ann"  # {name} in the preview
+PREVIEW_MARKER = "%%MESSAGE%%"  # where the live preview puts the message into the email layout
+
+
+def preview_shell() -> str:
+    """The support email layout with a marker instead of the message, and the logo inlined
+    (in a real email it's an attachment, which a web page can't show)."""
+    logo = "data:image/png;base64," + base64.b64encode(LOGO_FILE.read_bytes()).decode()
+    context = {**email_context(), "logo_url": logo, "message_html": PREVIEW_MARKER}
+    return render_to_string("emails/support_email.html", context)
 PREVIOUS_LIMIT = 50  # emails listed in "Start from a previous email"
 
 
@@ -78,20 +92,26 @@ class SupportEmailAdmin(AdminOnlyModelAdmin):
 
     @admin.display(description="Preview")
     def message_preview(self, obj):
-        if not obj or not obj.pk or not obj.message:
-            return "Save the email to see how the message will look."
-        markup, _ = render_message(obj.message, "Ann")
-        # shown in a frame, so the admin page's own styles don't change how it looks
-        page = (
-            '<body style="margin:0;padding:20px 24px;background:#fff;'
-            f'font:15px/1.65 Arial,Helvetica,sans-serif;color:#334155">{markup}</body>'
-        )
+        """The whole email as people will see it (logo, layout, message). While you edit the subject or
+        message, the preview updates as you type (script in templates/admin/mailing/supportemail/change_form.html)."""
+        shell = preview_shell()
+        message = obj.message if obj else ""
+        subject = (obj.subject if obj else "").replace("{name}", PREVIEW_NAME)
         return format_html(
-            '<iframe srcdoc="{}" title="Preview" sandbox="allow-same-origin" '
-            'style="width:600px;max-width:100%;min-height:120px;border:1px solid #e6e3f3;border-radius:12px;background:#fff" '
-            "onload=\"this.style.height=(this.contentDocument.body.scrollHeight+4)+'px'\"></iframe>"
-            '<div style="margin-top:6px;color:#8a8fa3;font-size:12px">{{name}} shown as “Ann”.</div>',
-            page,
+            '<div style="margin-bottom:6px;color:#475569">Subject: <strong id="email-preview-subject">{}</strong></div>'
+            '<iframe id="email-preview" srcdoc="{}" data-shell="{}" data-marker="{}" data-name="{}" title="Preview" '
+            'sandbox="allow-same-origin" '
+            'style="width:640px;max-width:100%;min-height:160px;border:1px solid #e6e3f3;border-radius:12px;background:#f7f7fd" '
+            "onload=\"this.style.height=(this.contentDocument.body.offsetHeight+4)+'px'\"></iframe>"
+            '<div style="margin-top:6px;color:#8a8fa3;font-size:12px">'
+            "Updates as you type. {{name}} is shown as “{}”.</div>",
+            subject or "—",
+            # escape(): the layout comes back marked "safe", but inside an attribute it must be escaped
+            escape(shell.replace(PREVIEW_MARKER, render_message(message, PREVIEW_NAME)[0])),
+            escape(shell),
+            PREVIEW_MARKER,
+            PREVIEW_NAME,
+            PREVIEW_NAME,
         )
 
     @admin.display(description="Who will get it")
@@ -149,7 +169,7 @@ class SupportEmailAdmin(AdminOnlyModelAdmin):
         if not reused:
             hide |= {"copied_from", "reused_from", "skip_already_received"}
         if obj is None:  # new email: no preview or status yet; "reused from" is shown above the form
-            hide |= {"message_preview", "reused_from"}
+            hide.add("reused_from")
         if obj is not None:
             hide.add("copied_from")  # set once, on the new email page
         sets = []

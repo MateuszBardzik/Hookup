@@ -208,3 +208,38 @@
   line-height: 1.65;
   white-space: pre-line; /* keeps the line breaks typed in the database */
 }
+
+/* "Apply now" on a position that isn't active yet: still clickable (opens the "not open yet" popup), but muted */
+.applyInactive,
+.applyInactive:hover {
+  background: #e7e9ef;
+  border-color: #e7e9ef;
+  color: var(--color-muted);
+  box-shadow: none;
+}
+
+/* "Not open for applications yet" popup */
+.notOpen {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+.notOpen p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+.notOpen strong {
+  color: var(--color-text);
+}
+.notOpenIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}

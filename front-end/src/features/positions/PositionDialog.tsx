@@ -30,7 +30,7 @@ export function PositionDialog({ position, onClose, applied = false }: Props) {
         <Section title="Instruction guideline" text={position.instruction_guideline} />
       </div>
       <div className={styles.dialogFooter}>
-        {applied ? <AppliedLink /> : <ApplyButton positionId={position.id} block />}
+        {applied ? <AppliedLink /> : <ApplyButton position={position} block />}
       </div>
     </Modal>
   )

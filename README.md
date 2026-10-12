@@ -99,7 +99,10 @@ The applicant follows every step on their dashboard (/portal).
 
 The test popup shows the position's `test_instructions` and a **Start the test** button that opens that
 position's `test_form_url` in a new tab. It's available while the application is at step 2 (right after applying).
-A position with no `test_form_url` shows "Test not available yet".
+A position with no `test_form_url` is **not active yet**: its card shows a grey circle instead of a green one, and
+"Apply now" opens a "Not open for applications yet" popup instead of the Apply page (text: `site.ts` →
+`apply.notOpen*`). The Apply page lists it as "(not open yet)" and the server refuses applications to it.
+Paste the test link and it opens for applications right away.
 
 To pre-fill the user's name and email in the form:
 
@@ -181,7 +184,7 @@ The support team can email users from the admin pages (**/hookup/** → *Support
 1. Write a **subject** and **message**; `{name}` becomes the person's first name. The message is **HTML** with
    inline `style="…"` (email apps ignore `<style>` blocks). A new email starts with a small example (greeting,
    paragraph, indigo button, sign-off) to edit. Nothing is added after your message, so write your own sign-off.
-   After saving, a **Preview** shows how it will look. The plain-text copy (for email apps without HTML) is made
+   The **Preview** under the message shows the whole email (logo, layout, subject) and updates as you type. The plain-text copy (for email apps without HTML) is made
    automatically: tags removed, links written as `text (address)`. Code: `back-end/mailing/formatting.py`.
 2. Choose **Send to**: selected users · all users with a verified email · all active users · everyone who applied
    (to one position or to any). The page shows who will get it after you save.

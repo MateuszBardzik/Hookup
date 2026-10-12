@@ -22,7 +22,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label: string
   name: string
   error?: string
-  options: { value: string | number; label: string }[]
+  options: { value: string | number; label: string; disabled?: boolean }[]
   placeholder?: string
 }
 
@@ -34,7 +34,7 @@ export function Select({ label, name, error, id, options, placeholder, ...props 
       <select id={inputId} name={name} aria-invalid={!!error} {...props}>
         {placeholder !== undefined && <option value="">{placeholder}</option>}
         {options.map((o) => (
-          <option key={o.value} value={o.value}>
+          <option key={o.value} value={o.value} disabled={o.disabled}>
             {o.label}
           </option>
         ))}

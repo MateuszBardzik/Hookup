@@ -125,6 +125,8 @@ class ApplicationSerializer(serializers.ModelSerializer):
     def validate_position(self, position):
         if not position.is_active:
             raise serializers.ValidationError("This position is closed.")
+        if not position.test_form_url:  # not active yet: the qualification test isn't ready
+            raise serializers.ValidationError("This position isn't accepting applications yet. Please check back soon.")
         user = self.context["request"].user
         if Application.objects.filter(user=user, position=position).exists():
             raise serializers.ValidationError("You already applied to this position.")

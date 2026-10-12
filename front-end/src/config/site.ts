@@ -236,6 +236,11 @@ export const site = {
     title: 'Apply for a position',
     subtitle: "Fill out the form below and tell us about yourself. We'll review your application and get back to you soon.",
     termsText: 'I agree to the Terms & Conditions and Privacy Policy',
+    /** Popup when someone tries to apply to a position that isn't active yet (no qualification test link). */
+    notOpenTitle: 'Not open for applications yet',
+    notOpenText:
+      "We're still preparing the qualification test for {position}, so applications aren't open yet. Please check back soon — positions with a green dot are open now.",
+    notOpenButton: 'Got it',
   },
 
   /** About page (/about). icon for values: 'target' | 'users' | 'shield' | 'heart' */

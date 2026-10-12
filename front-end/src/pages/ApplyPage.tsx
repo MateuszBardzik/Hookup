@@ -6,6 +6,7 @@
  * logged-out visitors see Sign up / Log in buttons first.
  * Saved in the database: admin pages → Applications. Submitting moves the application straight to
  * step 2, so the success screen offers the position's qualification test (Google Form) right away.
+ * Positions that aren't active yet (no test link) can't be picked; a link to one shows the "not open yet" popup.
  */
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
@@ -18,6 +19,7 @@ import { PageHero } from '../components/PageHero'
 import { site } from '../config/site'
 import { useAuthDialog } from '../features/auth/useAuthDialog'
 import styles from '../features/pages/Pages.module.css'
+import { NotOpenDialog } from '../features/positions/ApplyButton'
 import { ApplyTestDialog } from '../features/positions/ApplyTestDialog'
 import type { Application, Position } from '../types'
 
@@ -104,6 +106,8 @@ function ApplyForm({
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [message, setMessage] = useState('')
   const [sending, setSending] = useState(false)
+  // e.g. /apply?position=<id> of a position that isn't open yet → popup, then the choice is cleared
+  const notOpen = positions.find((p) => String(p.id) === form.position && !p.is_active)
 
   function update(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -132,6 +136,7 @@ function ApplyForm({
 
   return (
     <form className={styles.applyForm} onSubmit={submit} noValidate>
+      {notOpen && <NotOpenDialog title={notOpen.title} onClose={() => setForm({ ...form, position: '' })} />}
       <div className={styles.formCol}>
         <h2>Experience & skills</h2>
         <Select
@@ -141,7 +146,11 @@ function ApplyForm({
           onChange={update}
           error={errors.position}
           placeholder="Select a position"
-          options={positions.map((p) => ({ value: p.id, label: p.title }))}
+          options={positions.map((p) => ({
+            value: p.id,
+            label: p.is_active ? p.title : `${p.title} (not open yet)`,
+            disabled: !p.is_active, // no qualification test yet → can't apply
+          }))}
         />
         <TextArea
           label="Related experience *"
